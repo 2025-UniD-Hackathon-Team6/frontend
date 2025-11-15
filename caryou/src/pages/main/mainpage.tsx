@@ -18,7 +18,6 @@ const MainPage: React.FC = () => {
       });
       console.log(response);
       localStorage.removeItem("accessToken");
-      alert("로그아웃 성공");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch(error) {
       alert("404 에러 발생!!");
