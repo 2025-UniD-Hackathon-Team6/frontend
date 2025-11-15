@@ -25,7 +25,6 @@ interface DailyReport {
   };
 }
 
-/** ⭐ 추천 공고 타입 */
 interface JobItem {
   id: number;
   title: string;
@@ -45,39 +44,27 @@ const moodToStressLevel = (mood: MoodType): string => {
     case "happy": return "Low";
     case "great": return "ExtremelyLow";
     default: return "Middle";
-      
-const MainPage: React.FC = () => {
-  const isTokenExist = () => {
-    return !!localStorage.getItem("accessToken");
   }
 };
 
-/** ⭐ 직무명 → 아이콘 자동 매핑 */
+/** ⭐ 직무명 → 아이콘 매핑 */
 const getPositionEmoji = (positionName: string = "") => {
   const name = positionName.toLowerCase();
 
-  if (name.includes("프론트") || name.includes("front"))
-    return "🖥️"; // 프론트엔드
-  if (name.includes("백엔드") || name.includes("back"))
-    return "🛠️"; // 백엔드
-  if (name.includes("pm") || name.includes("프로덕트") || name.includes("기획"))
-    return "📌"; // PM
-  if (name.includes("데이터") || name.includes("ai") || name.includes("ml"))
-    return "📊"; // 데이터/AI
-  if (name.includes("디자") || name.includes("design"))
-    return "🎨"; // 디자인
-  if (name.includes("마케팅"))
-    return "📣"; // 마케팅
-  if (name.includes("게임"))
-    return "🎮"; // 게임
+  if (name.includes("프론트") || name.includes("front")) return "🖥️";
+  if (name.includes("백엔드") || name.includes("back")) return "🛠️";
+  if (name.includes("pm") || name.includes("기획") || name.includes("프로덕트")) return "📌";
+  if (name.includes("데이터") || name.includes("ai") || name.includes("ml")) return "📊";
+  if (name.includes("디자") || name.includes("design")) return "🎨";
+  if (name.includes("마케팅")) return "📣";
+  if (name.includes("게임")) return "🎮";
 
-  return "💼"; // 기본값
+  return "💼";
 };
 
 const MainPage: React.FC = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("accessToken"));
-
   const [showMoodModal, setShowMoodModal] = useState(false);
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
 
@@ -95,7 +82,7 @@ const MainPage: React.FC = () => {
 
   const stripMd = (t?: string) => t?.replace(/\*\*/g, "") ?? "";
 
-  /** ⭐ 기분 제출 → 출석 저장 */
+  /** ⭐ 기분 제출 */
   const submitMood = async () => {
     if (!selectedMood) return;
 
@@ -115,12 +102,8 @@ const MainPage: React.FC = () => {
 
     } catch (e) {
       console.error("submitMood error:", e);
-      setShowMoodModal(false);
-      console.log(response);
       localStorage.removeItem("accessToken");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch(error) {
-      alert("404 에러 발생!!");
+      alert("서버 오류가 발생했습니다.");
     }
   };
 
@@ -133,8 +116,6 @@ const MainPage: React.FC = () => {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
 
-      console.log("추천 공고 응답:", res.data);
-
       if (Array.isArray(res.data.jobs)) {
         const mapped = res.data.jobs.map((job: any) => ({
           id: job.id,
@@ -145,7 +126,6 @@ const MainPage: React.FC = () => {
           description: job.description,
           url: job.sourceUrl,
         }));
-
         setJobList(mapped);
       }
 
@@ -154,11 +134,10 @@ const MainPage: React.FC = () => {
     }
   };
 
-  /** ⭐ 전체 데이터 로딩 */
+  /** ⭐ 전체 로딩 */
   useEffect(() => {
     const fetchAll = async () => {
       const token = localStorage.getItem("accessToken");
-
       if (!token) return;
 
       try {
@@ -180,11 +159,13 @@ const MainPage: React.FC = () => {
         const kRes = await fetch(`${BASE_URL}/api/daily/keyword`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (kRes.ok) setDailyKeyword(await kRes.json());
 
         const rRes = await fetch(`${BASE_URL}/api/daily/report`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (rRes.ok) setDailyReport(await rRes.json());
 
         loadRecommendedJobs();
@@ -197,7 +178,7 @@ const MainPage: React.FC = () => {
     fetchAll();
   }, []);
 
-  /** 로그아웃 */
+  /** ⭐ 로그아웃 */
   const logout = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -218,8 +199,7 @@ const MainPage: React.FC = () => {
 
   return (
     <div className="main-container">
-
-      {/* ⭐ 기분 선택 모달 */}
+      {/* 모달 */}
       {showMoodModal && isLoggedIn && (
         <div className="mood-modal-overlay">
           <div className="mood-modal">
@@ -238,7 +218,7 @@ const MainPage: React.FC = () => {
         </div>
       )}
 
-      {/* ===== 상단바 ===== */}
+      {/* 상단바 */}
       <header className="navbar">
         <div className="nav-inner">
           <div className="nav-left">
@@ -259,10 +239,10 @@ const MainPage: React.FC = () => {
         </div>
       </header>
 
-      {/* ========= 메인 ========= */}
+      {/* 메인 */}
       <main className="main-content">
-
-        {/* === 오늘의 키워드 === */}
+        
+        {/* 키워드 */}
         <section className="keyword-section">
           <div className="keyword-card">
             <div className="keyword-header">
@@ -281,7 +261,7 @@ const MainPage: React.FC = () => {
           </div>
         </section>
 
-        {/* === 오늘의 리포트 === */}
+        {/* 리포트 */}
         <section className="report-section">
           <div className="section-title-row">
             <div className="section-title-icon-circle clock"><span>🕒</span></div>
@@ -312,7 +292,7 @@ const MainPage: React.FC = () => {
           </div>
         </section>
 
-        {/* === 추천 공고 === */}
+        {/* 추천 공고 */}
         <section className="job-section">
           <div className="section-title-row">
             <div className="section-title-icon-circle briefcase"><span>💼</span></div>
@@ -325,12 +305,8 @@ const MainPage: React.FC = () => {
             ) : (
               jobList.map(job => (
                 <div className="job-card" key={job.id}>
-
                   <div className="job-card-header">
-                    <div className="job-icon-square">
-                      {getPositionEmoji(job.career)}
-                    </div>
-
+                    <div className="job-icon-square">{getPositionEmoji(job.career)}</div>
                     <div className="job-header-text">
                       <div className="job-position">{job.title}</div>
                       <div className="job-company">{job.company}</div>
@@ -345,7 +321,6 @@ const MainPage: React.FC = () => {
                   <a href={job.url} target="_blank" rel="noopener noreferrer">
                     <button className="job-scrap-btn">🔗</button>
                   </a>
-
                 </div>
               ))
             )}
