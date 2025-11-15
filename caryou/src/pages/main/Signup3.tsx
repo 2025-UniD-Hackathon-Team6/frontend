@@ -1,6 +1,10 @@
 import "./signup.css";
+import { useState } from "react";
 
 export default function Signup3() {
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const isFormComplete = selectedRole !== null; // 선택되면 버튼 활성화
+
   const stress = [
     { label: "전혀 없어요", icon: "😊" },
     { label: "조금 있어요", icon: "🙂" },
@@ -8,6 +12,18 @@ export default function Signup3() {
     { label: "조금 많아요", icon: "🤯" },
     { label: "많이 있어요", icon: "😵" }
   ];
+
+  const toggleRole = (title: string) => {
+    if (selectedRole === title) {
+      // 이미 선택된 카드면 해제
+      setSelectedRole(null);
+    } else {
+      // 새 카드 선택 시 이전 선택 해제 후 새 카드 선택
+      setSelectedRole(title);
+    }
+  };
+
+
   return (
     <div className="signup-wrapper">
       <div className="signup-container">
@@ -25,20 +41,29 @@ export default function Signup3() {
           <p className="subtitle">솔직하게 선택해주세요. 더 나은 서비스를 제공해드릴게요!</p>
 
           <div className="grid">
-          {stress.map((s, i) => (
-            <div key={i} className="card">
-            <div className="icon">{s.icon}</div>
-            <div className="card-title">{s.label}</div>
-            </div>
-            ))}
+            {stress.map((r, i) => {
+              const isActive = selectedRole === r.label;
+              return (
+                <div
+                  key={i}
+                  className={`card ${isActive ? "active" : ""}`}
+                  onClick={() => toggleRole(r.label)}
+                >
+                  <div className="icon">{r.icon}</div>
+                  <div className="card-title">{r.label}</div>
+                  <div className="card-desc">{r.label}</div>
+                </div>
+              );
+            })}
           </div>
-
-
           <div className="bottom"></div>
-
-
           <div id="blank"></div>
-          <button className="next-btn">가입 완료 ✔</button>
+          <button disabled={!isFormComplete} 
+              style={{opacity: !isFormComplete ? 0.5 : 1,  // 비활성화되면 반투명
+                cursor: !isFormComplete ? 'not-allowed' : 'pointer', // 비활성화되면 커서 변경
+                transition: 'opacity 0.3s ease', // 부드러운 효과
+              }}
+              className="next-btn">다음 단계로 →</button>
         </div>
       </div>
     </div>

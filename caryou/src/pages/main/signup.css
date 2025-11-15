@@ -96,6 +96,14 @@ transform: translateY(-3px);
 box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
+.card.active {
+  background-color: #b291d0; /* 보라색 */
+  color: white;
+  border: 2px solid #b291d0;
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
 
 .icon {
 font-size: 30px;

@@ -1,8 +1,27 @@
 import "./signup.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup2 from "./Signup2";
+import { useState } from "react";
 
 export default function Signup1() {
+  const [inputs, setInputs] = useState({
+    input1: '',
+    input2: '',
+    input3: '',
+    input4: '',
+    input5: '',
+    input6: ''
+  });
+
+  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target;
+    setInputs(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const isFormComplete = Object.values(inputs).every(input=> input!=='');
+
   return (
     <div className="signup-wrapper">
       <div className="signup-container">
@@ -19,16 +38,21 @@ export default function Signup1() {
           <h2 className="form-title">기본 정보를 입력해주세요</h2>
 
           <div className="form-grid">
-            <input type="text" placeholder="이름" />
-            <input type="email" placeholder="이메일" />
-            <input type="password" placeholder="비밀번호" />
-            <input type="password" placeholder="비밀번호 확인" />
-            <input type="text" placeholder="전화번호" />
-            <input type="date" placeholder="생년월일" />
+            <input type="text" name="input1" onChange={handleInputChange} placeholder="이름" />
+            <input type="email" name="input2" onChange={handleInputChange} placeholder="이메일" />
+            <input type="password" name="input3" onChange={handleInputChange} placeholder="비밀번호" />
+            <input type="password" name="input4" onChange={handleInputChange} placeholder="비밀번호 확인" />
+            <input type="text" name="input5" onChange={handleInputChange} placeholder="전화번호" />
+            <input type="text" name="input6" onChange={handleInputChange} maxLength={8} placeholder="생년월일" />
           </div>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<button className="next-btn">다음 단계로 →</button>} />
+              <Route path="/" element={<button disabled={!isFormComplete} 
+              style={{opacity: !isFormComplete ? 0.5 : 1,  // 비활성화되면 반투명
+                cursor: !isFormComplete ? 'not-allowed' : 'pointer', // 비활성화되면 커서 변경
+                transition: 'opacity 0.3s ease', // 부드러운 효과
+              }}
+              className="next-btn">다음 단계로 →</button>} />
             </Routes>
           </BrowserRouter>
         </div>
