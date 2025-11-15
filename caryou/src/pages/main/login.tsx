@@ -2,14 +2,10 @@ import "./signup.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
-export default function Signup1() {
+export default function Login() {
   const [inputs, setInputs] = useState({
     input1: '',
     input2: '',
-    input3: '',
-    input4: '',
-    input5: '',
-    input6: ''
   });
 
   const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -28,22 +24,14 @@ export default function Signup1() {
         <h1 className="title">CARYOU</h1>
         <p className="subtitle">나만의 커리어 여정을 시작해보세요! 🚀</p>
 
-        <div className="steps">
-          <div className="step active">1</div>
-          <div className="step">2</div>
-          <div className="step">3</div>
-        </div>
+        <div className="blank"></div>
 
         <div className="form-box">
-          <h2 className="form-title">기본 정보를 입력해주세요</h2>
+          <h2 className="form-title">아이디와 비밀번호를 입력해주세요</h2>
 
-          <div className="form-grid">
-            <input type="text" name="input1" onChange={handleInputChange} placeholder="이름" />
-            <input type="text" name="input2" onChange={handleInputChange} placeholder="아이디" />
-            <input type="password" name="input3" onChange={handleInputChange} placeholder="비밀번호" />
-            <input type="password" name="input4" onChange={handleInputChange} placeholder="비밀번호 확인" />
-            <input type="text" name="input5" onChange={handleInputChange} placeholder="전화번호" />
-            <input type="text" name="input6" onChange={handleInputChange} maxLength={8} placeholder="생년월일" />
+          <div className="form-login">
+            <input type="text" name="input1" className="login-input" onChange={handleInputChange} placeholder="아이디" />
+            <input type="password" name="input2" className="login-input" onChange={handleInputChange} placeholder="비밀번호" />
           </div>
           <BrowserRouter>
             <Routes>
@@ -52,10 +40,12 @@ export default function Signup1() {
                 cursor: !isFormComplete ? 'not-allowed' : 'pointer', // 비활성화되면 커서 변경
                 transition: 'opacity 0.3s ease', // 부드러운 효과
               }}
-              className="next-btn">다음 단계로 →</button>} />
+              className="next-btn">로그인</button>} />
             </Routes>
           </BrowserRouter>
+          <div className="blank"></div>
         </div>
+        <button className="signup-btn">아직 계정이 없으신가요? 회원가입 하세요</button>
       </div>
     </div>
   );

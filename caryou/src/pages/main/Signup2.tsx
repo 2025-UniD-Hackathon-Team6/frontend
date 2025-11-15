@@ -62,7 +62,7 @@ export default function Signup2() {
               );
             })}
           </div>
-          <div id="blank"></div>
+          <div className="blank"></div>
           <button disabled={!isFormComplete} 
               style={{opacity: !isFormComplete ? 0.5 : 1,  // 비활성화되면 반투명
                 cursor: !isFormComplete ? 'not-allowed' : 'pointer', // 비활성화되면 커서 변경
