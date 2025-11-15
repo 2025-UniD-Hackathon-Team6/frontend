@@ -1,10 +1,81 @@
 // pages/mypage/mypage.tsx  (대시보드 화면)
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../style/main/mainpage.css';
 import '../../style/mypage/mypage.css';
 
+const BASE_URL = "http://52.79.172.1:4000";
+const ACCESS_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTc2MzIzMjMyMSwiZXhwIjoxNzYzMjM0MTIxLCJpc3MiOiJjYXJ5b3UuZGV2In0.zYkX4lnOZHEmtMbn_6NMNCDvYp94zFS_ueO1oMITW2s";
+
 const MyPage: React.FC = () => {
+    const [weeklyCount, setWeeklyCount] = useState(0);  
+  const [weeklyDays, setWeeklyDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
+
+  // 날짜 유틸
+  const getWeekRange = () => {
+    const today = new Date();
+    const day = today.getDay(); // 일:0 ~ 토:6
+    const diffToMonday = (day === 0 ? -6 : 1 - day); // 월요일을 기준으로 보정
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + diffToMonday);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    return { monday, sunday };
+  };
+
+  const isSameDate = (d1: Date, d2: Date) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+
+  // ⭐ 월간 출석 → 이번주 출석 계산
+  const loadAttendance = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/attend/month`, {
+        method: "GET",
+        headers: {
+          Authorization: ACCESS_TOKEN,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const list = await res.json(); // 배열 형태
+
+      const { monday, sunday } = getWeekRange();
+
+      // 이번 주 출석 데이터 필터링
+      const thisWeek = list.filter((item: any) => {
+        const d = new Date(item.checkinDate);
+        return d >= monday && d <= sunday;
+      });
+
+      // 활동 일수
+      setWeeklyCount(thisWeek.length);
+
+      // 월~일 출석 여부
+      const flags = [false, false, false, false, false, false, false];
+
+      thisWeek.forEach((item: any) => {
+        const d = new Date(item.checkinDate);
+        const weekday = d.getDay(); // 0=일~6=토
+        const idx = (weekday === 0 ? 6 : weekday - 1); // 월=0 ~ 일=6
+        flags[idx] = true;
+      });
+
+      setWeeklyDays(flags);
+
+    } catch (e) {
+      console.error("Attendance load error: ", e);
+    }
+  };
+
+  useEffect(() => {
+    loadAttendance();
+  }, []);
+
   return (
     <div className="main-container">
       {/* 상단바 */}
@@ -95,31 +166,22 @@ const MyPage: React.FC = () => {
 
             <div className="weekly-summary">
               <div className="weekly-box">
-                <div className="weekly-number">5</div>
+                <div className="weekly-number">{weeklyCount}</div>
                 <div className="weekly-label">활동 일수</div>
-              </div>
-              <div className="weekly-box weekly-box-green">
-                <div className="weekly-number weekly-number-green">280</div>
-                <div className="weekly-label">총 포인트</div>
               </div>
             </div>
 
             <div className="weekly-chart">
-              <div className="weekly-bar"></div>
-              <div className="weekly-bar"></div>
-              <div className="weekly-bar"></div>
-              <div className="weekly-bar"></div>
-              <div className="weekly-bar"></div>
-              <div className="weekly-bar"></div>
-              <div className="weekly-bar"></div>
+              {weeklyDays.map((attended, idx) => (
+                <div
+                  key={idx}
+                  className={`weekly-bar ${attended ? 'active' : ''}`}
+                ></div>
+              ))}
+
               <div className="weekly-axis-labels">
-                <span>월</span>
-                <span>화</span>
-                <span>수</span>
-                <span>목</span>
-                <span>금</span>
-                <span>토</span>
-                <span>일</span>
+                <span>월</span><span>화</span><span>수</span>
+                <span>목</span><span>금</span><span>토</span><span>일</span>
               </div>
             </div>
           </div>

@@ -1,10 +1,177 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../style/main/mainpage.css';
 import { Link } from 'react-router-dom';
 
+type MoodType = "sad" | "soso" | "neutral" | "happy" | "great";
+
+const BASE_URL = "http://52.79.172.1:4000";
+const ACCESS_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTc2MzIzMjMyMSwiZXhwIjoxNzYzMjM0MTIxLCJpc3MiOiJjYXJ5b3UuZGV2In0.zYkX4lnOZHEmtMbn_6NMNCDvYp94zFS_ueO1oMITW2s";
+
+interface DailyKeyword {
+  date: string;
+  keyword: string;
+  description: string;
+}
+
+interface DailyReport {
+  date: string;
+  title: string;
+  summary: string;
+  content: string;
+  position: {
+    name: string;
+    category: string;
+  };
+}
+
+// ⭐ Mood → StressLevel 변환
+const moodToStressLevel = (mood: MoodType): string => {
+  switch (mood) {
+    case "sad":
+      return "ExtremelyHigh";
+    case "soso":
+      return "High";
+    case "neutral":
+      return "Middle";
+    case "happy":
+      return "Low";
+    case "great":
+      return "ExtremelyLow";
+    default:
+      return "Middle";
+  }
+};
+
 const MainPage: React.FC = () => {
+  const [dailyKeyword, setDailyKeyword] = useState<DailyKeyword | null>(null);
+  const [dailyReport, setDailyReport] = useState<DailyReport | null>(null);
+  const [showFull, setShowFull] = useState(false);
+
+  const [showMoodModal, setShowMoodModal] = useState(false);
+  const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
+
+  // 날짜 출력 포맷
+  const formatDate = (iso?: string) => {
+    if (!iso) return "";
+    const [y, m, d] = iso.split("-");
+    return `${y}년 ${Number(m)}월 ${Number(d)}일`;
+  };
+
+  const stripMd = (t?: string) => t?.replace(/\*\*/g, "") ?? "";
+
+  // ⭐ 기분 제출 → 백엔드로 출석 체크 저장
+  const submitMood = async () => {
+    if (!selectedMood) return;
+
+    const stressLevel = moodToStressLevel(selectedMood);
+
+    try {
+      const res = await fetch(`${BASE_URL}/attend`, {
+        method: "POST",
+        headers: {
+          Authorization: ACCESS_TOKEN,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ stressLevel }),
+      });
+
+      if (!res.ok) {
+        console.warn("출석 저장 실패", res.status);
+      }
+
+      setShowMoodModal(false);
+    } catch (e) {
+      console.error("submitMood error:", e);
+      setShowMoodModal(false);
+    }
+  };
+
+  // ⭐ 페이지 로딩 → 출석 체크 여부 확인
+  useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        // --- 출석 여부 확인 (GET /api/attend/today)
+        const attendRes = await fetch(`${BASE_URL}/attend/today`, {
+          headers: { Authorization: ACCESS_TOKEN },
+        });
+
+        const attendJson = await attendRes.json();
+
+        if (attendJson === null) {
+          setShowMoodModal(true);  // 출석 안 함 → 모달 띄우기
+        } else {
+          setShowMoodModal(false); // 이미 출석 → 모달 X
+        }
+        
+        // 1) 오늘의 키워드
+        const kRes = await fetch(`${BASE_URL}/api/daily/keyword`, {
+          headers: { Authorization: ACCESS_TOKEN },
+        });
+        const keywordJson = await kRes.json();
+
+        // 2) 리포트
+        const rRes = await fetch(`${BASE_URL}/api/daily/report`, {
+          headers: { Authorization: ACCESS_TOKEN },
+        });
+        const reportJson = await rRes.json();
+
+        setDailyKeyword(keywordJson);
+        setDailyReport(reportJson);
+      } catch (e) {
+        console.error("API error:", e);
+      }
+    };
+
+    fetchAll();
+  }, []);
+
   return (
     <div className="main-container">
+
+      {/* ⭐ 오늘 기분 선택 모달 */}
+      {showMoodModal && (
+        <div className="mood-modal-overlay">
+          <div className="mood-modal">
+            <div className="mood-title">오늘의 기분은 어떠세요?</div>
+
+            <div className="mood-icons">
+              <span
+                className={`mood-icon ${selectedMood === "sad" ? "selected" : ""}`}
+                onClick={() => setSelectedMood("sad")}
+              >😢</span>
+
+              <span
+                className={`mood-icon ${selectedMood === "soso" ? "selected" : ""}`}
+                onClick={() => setSelectedMood("soso")}
+              >☹️</span>
+
+              <span
+                className={`mood-icon ${selectedMood === "neutral" ? "selected" : ""}`}
+                onClick={() => setSelectedMood("neutral")}
+              >😐</span>
+
+              <span
+                className={`mood-icon ${selectedMood === "happy" ? "selected" : ""}`}
+                onClick={() => setSelectedMood("happy")}
+              >😊</span>
+
+              <span
+                className={`mood-icon ${selectedMood === "great" ? "selected" : ""}`}
+                onClick={() => setSelectedMood("great")}
+              >😁</span>
+            </div>
+
+            <button
+              className="mood-submit-btn"
+              onClick={submitMood}
+              disabled={!selectedMood}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 상단바 */}
       <header className="navbar">
         <div className="nav-inner">
@@ -45,7 +212,7 @@ const MainPage: React.FC = () => {
               </div>
               <div className="keyword-header-text">
                 <span className="keyword-title">오늘의 키워드</span>
-                <span className="keyword-date">2025년 11월 15일</span>
+                <span className="keyword-date">{dailyKeyword ? formatDate(dailyKeyword.date) : "Loading..."}</span>
               </div>
             </div>
 
@@ -53,9 +220,9 @@ const MainPage: React.FC = () => {
               <div className="keyword-main-icon-circle">
                 <span className="keyword-main-icon">🤖</span>
               </div>
-              <div className="keyword-main-title">AI &amp; 데이터 분석</div>
+              <div className="keyword-main-title">{dailyKeyword ? stripMd(dailyKeyword.keyword) : "Loading..."}</div>
               <div className="keyword-main-desc">
-                인공지능 시대, 데이터 분석 역량이 새로운 경쟁력입니다!
+                {dailyKeyword ? stripMd(dailyKeyword.description) : ""}
               </div>
             </div>
 
@@ -91,19 +258,33 @@ const MainPage: React.FC = () => {
                 <span>📈</span>
               </div>
               <div className="report-text-wrap">
-                <div className="report-title">2025 인공지능 산업 동향</div>
+                <div className="report-title">{dailyReport ? stripMd(dailyReport.title) : "Loading..."}</div>
                 <div className="report-desc">
-                  올해 AI 시장은 전년 대비 35% 성장했습니다. 특히 생성형 AI 분야가 주목받고 있으며,
-                  기업들의 실무 적용률이 급속도로 증가하고 있습니다.
+                  {dailyReport ? stripMd(dailyReport.summary) : ""}
                 </div>
                 <div className="report-tags">
-                  <span className="tag tag-blue">#AI</span>
-                  <span className="tag tag-green">#데이터분석</span>
-                  <span className="tag tag-purple">#트렌드</span>
+                  <span className="tag tag-blue">#{dailyReport?.position.category}</span>
+                  <span className="tag tag-green">#{dailyReport?.position.name}</span>
                 </div>
               </div>
             </div>
-            <button className="report-btn">리포트 자세히 읽기</button>
+            {!showFull ? (
+              <button className="report-btn" onClick={() => setShowFull(true)}>
+                리포트 자세히 읽기
+              </button>
+            ) : (
+              <div
+                style={{
+                  marginTop: 16,
+                  padding: 16,
+                  borderRadius: 12,
+                  background: "#f5f5f7",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {stripMd(dailyReport?.content)}
+              </div>
+            )}
           </div>
         </section>
 

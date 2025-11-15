@@ -1,8 +1,8 @@
 // pages/mypage/mypageMood.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../../style/main/mainpage.css';
-import '../../style/mypage/mypage.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "../../style/main/mainpage.css";
+import "../../style/mypage/mypage.css";
 
 const MyPageMood: React.FC = () => {
   return (
@@ -16,6 +16,7 @@ const MyPageMood: React.FC = () => {
             </div>
             <span className="nav-title">CARYOU</span>
           </div>
+
           <div className="nav-right">
             <Link to="/" className="nav-item">홈</Link>
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
@@ -47,56 +48,44 @@ const MyPageMood: React.FC = () => {
           <Link to="/mypage/settings" className="tab-pill">설정</Link>
         </section>
 
-        {/* 기분 기록 전체 그리드 */}
-        <section className="mood-grid">
+        {/* ===== 아래부터 '대시보드 레이아웃 구조 그대로' 적용 ===== */}
+        {/* 왼쪽 카드 / 오른쪽 카드 2열 구조 */}
+        <section className="mypage-grid">
           
-          {/* ────────────────── 왼쪽: 기분 추이 ────────────────── */}
-          <div className="card mood-chart-card">
+          {/* 왼쪽 ― 스트레스 기반 학습 미션 */}
+          <div className="card mission-card">
             <div className="mood-card-header">
               <div className="mood-icon-circle">
-                <span>📈</span>
+                <span>🎯</span>
               </div>
-              <span className="mood-card-title">기분 추이</span>
+              <span className="mood-card-title">스트레스 지수 기반 학습 미션</span>
             </div>
 
-            <div className="mood-chart">
-              <svg viewBox="0 0 100 60" className="mood-chart-svg">
-                <g className="mood-chart-grid">
-                  <line x1="0" y1="50" x2="100" y2="50" />
-                  <line x1="0" y1="40" x2="100" y2="40" />
-                  <line x1="0" y1="30" x2="100" y2="30" />
-                  <line x1="0" y1="20" x2="100" y2="20" />
-                  <line x1="0" y1="10" x2="100" y2="10" />
-                </g>
+            <div className="mission-box">
+              <div className="mission-level">
+                오늘의 스트레스 지수: <strong>3/5</strong> 😐
+              </div>
 
-                <path
-                  className="mood-chart-area"
-                  d="M5 35 L20 45 L35 35 L50 25 L65 35 L80 45 L95 35 L95 55 L5 55 Z"
-                />
-                <polyline
-                  className="mood-chart-line"
-                  points="5,35 20,45 35,35 50,25 65,35 80,45 95,35"
-                />
+              <div className="mission-list">
+                <div className="mission-item">
+                  <span className="mission-emoji">📘</span>
+                  <span className="mission-text">15분간 가벼운 기술 블로그 읽기</span>
+                </div>
 
-                <g className="mood-chart-points">
-                  <circle cx="5" cy="35" r="1.5" />
-                  <circle cx="20" cy="45" r="1.5" />
-                  <circle cx="35" cy="35" r="1.5" />
-                  <circle cx="50" cy="25" r="1.5" />
-                  <circle cx="65" cy="35" r="1.5" />
-                  <circle cx="80" cy="45" r="1.5" />
-                  <circle cx="95" cy="35" r="1.5" />
-                </g>
-              </svg>
+                <div className="mission-item">
+                  <span className="mission-emoji">🧩</span>
+                  <span className="mission-text">초간단 알고리즘 1문제 풀기</span>
+                </div>
 
-              <div className="mood-chart-xlabels">
-                <span>월</span><span>화</span><span>수</span><span>목</span>
-                <span>금</span><span>토</span><span>일</span>
+                <div className="mission-item">
+                  <span className="mission-emoji">☕</span>
+                  <span className="mission-text">스트레칭 + 짧은 휴식 후 학습 시작하기</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* ────────────────── 오른쪽: 최근 기분 기록 ────────────────── */}
+          {/* 오른쪽 ― 최근 기분 기록 */}
           <div className="card mood-recent-card">
             <div className="mood-card-header">
               <div className="mood-icon-circle">
@@ -126,8 +115,8 @@ const MyPageMood: React.FC = () => {
                 </div>
               </div>
             </div>
-
           </div>
+
         </section>
       </main>
     </div>
