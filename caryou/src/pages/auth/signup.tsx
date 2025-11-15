@@ -65,11 +65,11 @@ const Signup: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
+    /*try {
       const response = await axios.post('http://52.79.172.1:4000/auth/register', { 
         name: basic.email,
         password: ,
-      });
+      });*/
     alert("가입 완료!");
     navigate("/"); // ▶ 메인페이지로 즉시 이동
   };
