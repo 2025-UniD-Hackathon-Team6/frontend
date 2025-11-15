@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const MainPage: React.FC = () => {
-  console.log("ccc");
-  console.log(localStorage.getItem("accessToken"));
-  console.log(!!localStorage.getItem("accessToken"));
-
   const isTokenExist = () => {
     return !!localStorage.getItem("accessToken");
   }
@@ -23,6 +19,7 @@ const MainPage: React.FC = () => {
       console.log(response);
       localStorage.removeItem("accessToken");
       alert("로그아웃 성공");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch(error) {
       alert("404 에러 발생!!");
     }
