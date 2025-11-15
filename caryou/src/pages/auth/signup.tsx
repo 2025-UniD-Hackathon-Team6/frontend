@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../style/auth/signup.css";
+import axios from "axios";
 
 type BasicInputs = {
   name: string;
-  email: string;
+  id: string;
   password: string;
   passwordConfirm: string;
   phone: string;
@@ -35,7 +36,7 @@ const Signup: React.FC = () => {
 
   const [basic, setBasic] = useState<BasicInputs>({
     name: "",
-    email: "",
+    id: "",
     password: "",
     passwordConfirm: "",
     phone: "",
@@ -62,10 +63,25 @@ const Signup: React.FC = () => {
   const handleNext = () => setStep((prev) => (prev === 3 ? 3 : (prev + 1) as 1 | 2 | 3));
   const handlePrev = () => setStep((prev) => (prev === 1 ? 1 : (prev - 1) as 1 | 2 | 3));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await axios.post('http://52.79.172.1:4000/auth/register', { 
+        name: basic.id,
+        password: basic.password,
+      });
+
+      const response2 = await axios.post('http://52.79.172.1:4000/auth/login', { 
+        name: basic.id,
+        password: basic.password,
+      });
+      localStorage.setItem('accessToken', response2.data["accessToken"]);
     alert("가입 완료!");
     navigate("/"); // ▶ 메인페이지로 즉시 이동
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      alert("404 에러 발생",);
+    }
   };
 
   return (
@@ -91,7 +107,7 @@ const Signup: React.FC = () => {
               <h2 className="form-title">기본 정보를 입력해주세요</h2>
               <div className="form-grid">
                 <input name="name" placeholder="이름" onChange={handleBasicChange} />
-                <input name="email" placeholder="이메일" onChange={handleBasicChange} />
+                <input name="id" placeholder="아이디" onChange={handleBasicChange} />
                 <input name="password" placeholder="비밀번호" onChange={handleBasicChange} />
                 <input
                   name="passwordConfirm"

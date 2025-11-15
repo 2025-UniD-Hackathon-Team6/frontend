@@ -137,3 +137,7 @@ color: #555;
   font-size: 16px;
   cursor: pointer;
 }
+
+#error {
+  color: red;
+}
