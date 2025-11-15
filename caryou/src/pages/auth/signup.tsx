@@ -66,7 +66,7 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://52.79.172.1:4000/auth/register', { 
+      await axios.post('http://52.79.172.1:4000/auth/register', { 
         name: basic.id,
         password: basic.password,
       });
@@ -78,8 +78,9 @@ const Signup: React.FC = () => {
       localStorage.setItem('accessToken', response2.data["accessToken"]);
     alert("가입 완료!");
     navigate("/"); // ▶ 메인페이지로 즉시 이동
-    } catch (error) {
-      alert("404 에러 발생");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      alert("404 에러 발생",);
     }
   };
 
