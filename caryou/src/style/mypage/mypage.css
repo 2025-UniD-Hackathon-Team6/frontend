@@ -1,0 +1,725 @@
+/* 전체 레이아웃 */
+.mypage-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  box-sizing: border-box;
+}
+
+/* 네비게이션 활성 탭 (상단바용이 아니라 마이페이지 탭용) */
+.nav-item-active {
+  color: #2563eb !important;
+  font-weight: 700;
+}
+
+/* 프로필 카드 */
+.profile-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 24px 32px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-avatar-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #e5edff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #64748b;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.profile-email {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.profile-right {
+  text-align: right;
+}
+
+.profile-points {
+  font-size: 26px;
+  font-weight: 800;
+  color: #2563eb;
+}
+
+.profile-points-label {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* 탭 */
+.mypage-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 28px;
+}
+
+.tab-pill {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 22px;
+  background: #f3f4ff;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none; /* Link 밑줄 제거 */
+}
+
+.tab-pill-active {
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* 카드 공통 */
+.card {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  padding: 22px 24px 24px;
+  box-sizing: border-box;
+}
+
+/* 섹션 헤더 공통 (대시보드용) */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.section-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.section-header-icon.calendar {
+  background: #e0f2fe;
+  color: #2563eb;
+}
+
+.section-header-icon.stats {
+  background: #e0f2fe;
+  color: #2563eb;
+}
+
+.section-header-icon.recent {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.section-header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* 상단 그리드 (대시보드) */
+.mypage-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+/* 오늘의 활동 리스트 */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  border-radius: 18px;
+  padding: 14px 16px;
+}
+
+.activity-blue {
+  background: #eef4ff;
+}
+
+.activity-green {
+  background: #ecfdf3;
+}
+
+.activity-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.activity-icon-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.activity-icon-circle.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.activity-icon-circle.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* 최근 활동 영역 */
+.recent-section {
+  width: 100%;
+}
+
+.recent-card {
+  margin-top: 8px;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recent-item {
+  border-radius: 18px;
+  padding: 14px 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recent-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.recent-icon-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* 파란 아이콘 */
+.recent-icon-circle.blue {
+  background: #e0ecff;
+  color: #2563eb;
+}
+
+/* 초록 아이콘 */
+.recent-icon-circle.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.recent-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.recent-time {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ================== 활동 캘린더 ================== */
+
+.calendar-section {
+  margin-top: 8px;
+}
+
+/* 프로필 카드와 동일 폭 사용 */
+.calendar-card {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* 헤더 – 제목 + 월 네비게이션 */
+.calendar-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.calendar-month-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.calendar-month-text {
+  font-size: 14px;
+  color: #111827;
+}
+
+.month-arrow {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  color: #111827;
+}
+
+/* 캘린더 그리드 */
+.calendar-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px; /* 네모칸 간격 */
+  font-size: 14px;
+}
+
+/* 요일 */
+.calendar-weekday {
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* 날짜 셀 – 네모칸 */
+.calendar-cell {
+  position: relative;
+  min-height: 72px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #111827;
+
+  display: flex;
+  align-items: flex-start; /* 숫자 위쪽 정렬 */
+  justify-content: flex-start;
+  gap: 4px; /* 숫자와 점 간격 */
+}
+
+.calendar-cell-muted {
+  color: #cbd5e1; /* 지난달 / 다음달 */
+  background: #f9fafb;
+}
+
+/* 오늘 날짜 */
+.calendar-cell-today {
+  border: 2px solid #3b82f6;
+  background: #eff6ff;
+  font-weight: 700;
+}
+
+/* 날짜 옆 점 */
+.calendar-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  margin-top: 2px; /* 숫자 기준선 맞추기 */
+}
+
+/* 활동 있음 – 초록 점 */
+.calendar-dot-green {
+  background: #22c55e;
+}
+
+/* 오늘 – 파란 점 */
+.calendar-dot-blue {
+  background: #3b82f6;
+}
+
+/* 범례 */
+.calendar-legend {
+  margin-top: 24px;
+  display: flex;
+  gap: 18px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.legend-dot-green {
+  background: #22c55e;
+}
+
+.legend-dot-blue {
+  background: #3b82f6;
+}
+
+/* 반응형 */
+@media (max-width: 960px) {
+  .calendar-card {
+    width: 100%;
+  }
+
+  .calendar-grid {
+    gap: 8px;
+  }
+}
+
+/* ===== 기분 기록 (Mood) ===== */
+
+/* 좌측 그래프 + 우측 리스트 2열 레이아웃 */
+.mood-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+/* 공통 카드 헤더 */
+.mood-card-header {
+  margin-bottom: 18px;
+}
+
+.mood-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ----- 기분 추이 카드 ----- */
+
+.mood-chart-card {
+  /* 기본 .card 스타일 그대로 사용 + 약간만 조정이 필요하면 여기서 */
+}
+
+.mood-chart {
+  margin-top: 8px;
+  padding: 16px 18px 18px;
+  border-radius: 20px;
+  background: #f4f6ff;
+  border: 1px solid #e5e7f5;
+}
+
+/* SVG 영역 */
+.mood-chart-svg {
+  width: 100%;
+  height: 230px;
+}
+
+/* 그리드 라인 */
+.mood-chart-grid line {
+  stroke: #e5e7eb;
+  stroke-width: 0.4;
+}
+
+/* 영역 채우기 */
+.mood-chart-area {
+  fill: rgba(129, 140, 248, 0.16);
+}
+
+/* 라인 */
+.mood-chart-line {
+  fill: none;
+  stroke: #6366f1;
+  stroke-width: 1.8;
+}
+
+/* 포인트 */
+.mood-chart-points circle {
+  fill: #6366f1;
+}
+
+/* x축 라벨 (월~일) */
+.mood-chart-xlabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ----- 최근 기분 기록 카드 ----- */
+
+.mood-recent-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.mood-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.mood-recent-item {
+  border-radius: 18px;
+  padding: 16px 18px;
+}
+
+.mood-recent-item-blue {
+  background: #eef5ff;
+}
+
+.mood-recent-item-yellow {
+  background: #fffce8;
+}
+
+.mood-recent-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mood-emoji-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.mood-emoji-happy {
+  background: #e0f2fe;
+}
+
+.mood-emoji-neutral {
+  background: #fef3c7;
+}
+
+.mood-recent-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.mood-recent-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.mood-recent-sub {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 반응형 – 모바일에서 세로로 스택 */
+@media (max-width: 960px) {
+  .mood-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== 기분 기록 섹션 아이콘 ===== */
+.mood-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.mood-icon-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ===== 설정(Settings) 영역 ===== */
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 24px;
+}
+
+/* 두 카드 모두 공통으로 card 클래스를 사용하고, 여기서 약간만 조정 */
+.settings-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 왼쪽 카드(프로필) – 그냥 이름만 남겨둔 상태, 필요하면 나중에 개별 옵션 추가 가능 */
+.settings-card-left {
+}
+
+/* 오른쪽 카드(관심 분야) */
+.settings-card-right {
+}
+
+/* 섹션 헤더 이모지 색상 */
+.section-header-icon.profile {
+  background: #e0f2fe;
+  color: #2563eb;
+}
+
+.section-header-icon.interest {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* 프로필 설정 폼 */
+.settings-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-label {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.settings-input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.settings-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25);
+}
+
+.settings-primary-btn {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.settings-primary-btn:hover {
+  background: #1d4ed8;
+}
+
+/* 관심 분야 칩 & 버튼 */
+.interest-chips {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.interest-chip {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid #3b82f6;
+  background: #ffffff;
+  color: #2563eb;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.interest-chip-active {
+  background: #e0f2ff;
+}
+
+.interest-save-btn {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  background: #22c55e;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.interest-save-btn:hover {
+  background: #16a34a;
+}
+
+/* 반응형 – 모바일에서 두 카드 위아래로 */
+@media (max-width: 960px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}

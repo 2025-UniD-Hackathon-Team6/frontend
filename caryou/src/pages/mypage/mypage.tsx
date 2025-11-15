@@ -1,111 +1,167 @@
-import React, { useState } from "react";
-import "../../style/main/main.css"; // 기존 CSS 그대로 사용
-import { useNavigate } from "react-router-dom";
-
-// 예시 데이터
-const activityData = [
-  { date: "2025-11-10", keyword: true, job: true },
-  { date: "2025-11-11", keyword: false, job: true },
-  { date: "2025-11-12", keyword: true, job: false },
-  { date: "2025-11-13", keyword: true, job: true },
-  { date: "2025-11-14", keyword: false, job: false },
-];
-
-const stressLevels = ["낮음", "보통", "높음"];
+// pages/mypage/mypage.tsx  (대시보드 화면)
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../../style/main/mainpage.css';
+import '../../style/mypage/mypage.css';
 
 const MyPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  const [selectedStress, setSelectedStress] = useState<string | null>(null);
-
   return (
-    <div className="container">
-      {/* Header */}
-      <header className="header">
-        <div className="logo-section">
-          <div className="logo-circle">C</div>
-          <div>
-            <h1>CARYOU</h1>
-            <p>나만 믿어라 — 너의 커리어는 내가 캐리한다</p>
+    <div className="main-container">
+      {/* 상단바 */}
+      <header className="navbar">
+        <div className="nav-inner">
+          <div className="nav-left">
+            <div className="nav-logo-circle">
+              <span className="nav-logo-emoji">🚀</span>
+            </div>
+            <span className="nav-title">CARYOU</span>
+          </div>
+          <div className="nav-right">
+            <Link to="/" className="nav-item">홈</Link>
+            <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
+            <Link to="/community" className="nav-item">커뮤니티</Link>
+            <Link to="/login" className="login-btn">로그인</Link>
           </div>
         </div>
-
-        <nav className="nav-buttons">
-          <button onClick={() => navigate("/")}>홈</button>
-          <button className="primary" onClick={() => navigate("/mypage")}>마이페이지</button>
-          <button>커뮤니티</button>
-          <button>오늘의 루틴</button>
-        </nav>
       </header>
 
-      <main className="main-grid">
-        {/* Left Column: 캘린더 + 활동 기록 */}
-        <section className="left-col">
-          <div className="card">
-            <h2>캘린더 활동 기록</h2>
-            <p>출석, 키워드 미션, 채용 공고 수행 내역 확인</p>
-
-            <div className="calendar-row">
-              {activityData.map((day, i) => (
-                <div key={i} className="calendar-box">
-                  <div className={`circle ${day.keyword ? "blue" : "gray"}`}></div>
-                  <div className={`circle ${day.job ? "green" : "gray"}`}></div>
-                </div>
-              ))}
+      <main className="mypage-content">
+        {/* 프로필 카드 */}
+        <section className="profile-card">
+          <div className="profile-left">
+            <div className="profile-avatar-circle">
+              <span>👤</span>
             </div>
-
-            <div className="legend">
-              <span><span className="circle blue"></span> 키워드 미션 완료</span>
-              <span><span className="circle green"></span> 채용 공고 확인</span>
+            <div className="profile-text">
+              <div className="profile-name">김철수님</div>
+              <div className="profile-email">cheolsu@example.com</div>
             </div>
           </div>
         </section>
 
-        {/* Right Column: 스트레스 체크 + 루틴 */}
-        <aside className="right-col">
-          <div className="card">
-            <h2>취업 스트레스 체크</h2>
-            <p>오늘의 스트레스 상태를 선택하면 루틴을 추천합니다.</p>
-            <div className="mood-buttons">
-              {stressLevels.map((level) => (
-                <button
-                  key={level}
-                  className={selectedStress === level ? "selected" : ""}
-                  onClick={() => setSelectedStress(level)}
-                >
-                  {level}
-                </button>
-              ))}
+        {/* 탭 – 대시보드 활성 */}
+        <section className="mypage-tabs">
+          <Link to="/mypage" className="tab-pill tab-pill-active">대시보드</Link>
+          <Link to="/mypage/calendar" className="tab-pill">활동 캘린더</Link>
+          <Link to="/mypage/mood" className="tab-pill">기분 기록</Link>
+          <Link to="/mypage/settings" className="tab-pill">설정</Link>
+        </section>
+
+        {/* ===== 아래는 네가 쓰던 '오늘의 활동 / 이번 주 통계 / 최근 활동' 코드 그대로 ===== */}
+        {/* 그리드: 오늘의 활동 / 이번 주 통계 */}
+        <section className="mypage-grid">
+          {/* 오늘의 활동 */}
+          <div className="card today-card">
+            <div className="section-header">
+              <div className="section-header-icon calendar">
+                <span>📅</span>
+              </div>
+              <span className="section-header-title">오늘의 활동</span>
+            </div>
+
+            <div className="activity-list">
+              <div className="activity-item activity-blue">
+                <div className="activity-main">
+                  <div className="activity-icon-circle blue">
+                    <span>📘</span>
+                  </div>
+                  <div className="activity-text">
+                    <div className="activity-title">AI 리포트 읽기 완료</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="activity-item activity-green">
+                <div className="activity-main">
+                  <div className="activity-icon-circle green">
+                    <span>✅</span>
+                  </div>
+                  <div className="activity-text">
+                    <div className="activity-title">일일 미션 완료</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {selectedStress && (
-            <div className="card">
-              <h3>추천 루틴</h3>
-              {selectedStress === "낮음" && (
-                <ul>
-                  <li>오늘은 가벼운 키워드 미션 수행</li>
-                  <li>짧은 산업 뉴스 읽기</li>
-                  <li>채용 공고 확인</li>
-                </ul>
-              )}
-              {selectedStress === "보통" && (
-                <ul>
-                  <li>키워드 미션 1개 완료</li>
-                  <li>3분 산업 리포트 읽기</li>
-                  <li>짧은 면접 예상 질문 작성</li>
-                </ul>
-              )}
-              {selectedStress === "높음" && (
-                <ul>
-                  <li>휴식과 감정 회복 루틴</li>
-                  <li>가벼운 키워드 미션 1개</li>
-                  <li>심호흡/명상 5분</li>
-                </ul>
-              )}
+          {/* 이번 주 통계 */}
+          <div className="card weekly-card">
+            <div className="section-header">
+              <div className="section-header-icon stats">
+                <span>📊</span>
+              </div>
+              <span className="section-header-title">이번 주 통계</span>
             </div>
-          )}
-        </aside>
+
+            <div className="weekly-summary">
+              <div className="weekly-box">
+                <div className="weekly-number">5</div>
+                <div className="weekly-label">활동 일수</div>
+              </div>
+              <div className="weekly-box weekly-box-green">
+                <div className="weekly-number weekly-number-green">280</div>
+                <div className="weekly-label">총 포인트</div>
+              </div>
+            </div>
+
+            <div className="weekly-chart">
+              <div className="weekly-bar"></div>
+              <div className="weekly-bar"></div>
+              <div className="weekly-bar"></div>
+              <div className="weekly-bar"></div>
+              <div className="weekly-bar"></div>
+              <div className="weekly-bar"></div>
+              <div className="weekly-bar"></div>
+              <div className="weekly-axis-labels">
+                <span>월</span>
+                <span>화</span>
+                <span>수</span>
+                <span>목</span>
+                <span>금</span>
+                <span>토</span>
+                <span>일</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 최근 활동 */}
+        <section className="recent-section">
+          <div className="card recent-card">
+            <div className="section-header">
+              <div className="section-header-icon recent">
+                <span>🔄</span>
+              </div>
+              <span className="section-header-title">최근 활동</span>
+            </div>
+
+            <div className="recent-list">
+              <div className="recent-item">
+                <div className="recent-left">
+                  <div className="recent-icon-circle blue">
+                    <span>📘</span>
+                  </div>
+                  <div className="recent-text">
+                    <div className="recent-title">AI 산업 리포트 읽기</div>
+                    <div className="recent-time">2시간 전</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="recent-item">
+                <div className="recent-left">
+                  <div className="recent-icon-circle green">
+                    <span>📌</span>
+                  </div>
+                  <div className="recent-text">
+                    <div className="recent-title">채용 공고 북마크</div>
+                    <div className="recent-time">5시간 전</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );

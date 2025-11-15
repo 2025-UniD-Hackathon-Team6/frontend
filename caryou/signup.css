@@ -1,0 +1,139 @@
+.signup-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eef2fd;
+}
+
+.signup-container {
+  width: 600px;
+  text-align: center;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: black;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #666;
+  font-size: 14px;
+}
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #d5d5ff;
+  color: white;
+  font-weight: 600;
+}
+
+.step.active {
+  background: #6a5af9;
+}
+
+.form-box {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.form-title {
+  font-size: 20px;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-grid input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 16px;
+}
+
+
+.card {
+background: #fafafa;
+padding: 18px;
+border-radius: 12px;
+border: 1px solid #e2e2e2;
+cursor: pointer;
+transition: 0.2s;
+}
+
+
+.card:hover {
+transform: translateY(-3px);
+box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.card.active {
+  background-color: #b291d0; /* 보라색 */
+  color: white;
+  border: 2px solid #b291d0;
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+
+.icon {
+font-size: 30px;
+margin-bottom: 10px;
+}
+
+
+.card-title {
+font-size: 16px;
+font-weight: 600;
+margin-bottom: 4px;
+}
+
+
+.card-desc {
+font-size: 13px;
+color: #555;
+}
+
+#blank {
+  padding: 10px;
+}
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  background: #6a5af9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
