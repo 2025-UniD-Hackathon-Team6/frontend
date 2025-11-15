@@ -1,11 +1,11 @@
 // pages/mypage/mypageCalendar.tsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import '../../style/main/mainpage.css';
 import '../../style/mypage/mypage.css';
 
 const BASE_URL = "http://52.79.172.1:4000";
-const ACCESS_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoidXNlciIsImlhdCI6MTc2MzIzMjMyMSwiZXhwIjoxNzYzMjM0MTIxLCJpc3MiOiJjYXJ5b3UuZGV2In0.zYkX4lnOZHEmtMbn_6NMNCDvYp94zFS_ueO1oMITW2s"; // 네 토큰 넣기
 
 interface Attendance {
   checkinDate: string;
@@ -15,26 +15,49 @@ const MyPageCalendar: React.FC = () => {
   const today = new Date();
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1); // 1~12
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1);
   const [attendanceMap, setAttendanceMap] = useState<Record<string, boolean>>({});
+
+  /** ⭐ 로그인 여부 */
+  const isTokenExist = () => {
+    return !!localStorage.getItem("accessToken");
+  };
+
+  /** ⭐ 로그아웃 */
+  const logout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      console.log(response);
+      localStorage.removeItem("accessToken");
+      alert("로그아웃 성공");
+    } catch (error) {
+      alert("로그아웃 요청 실패 (404)");
+    }
+  };
 
   /** ▣ API: 월간 출석 기록 가져오기 */
   const loadAttendance = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/attend/month`, {
-        method: "GET",
+      const response = await axios.get(`${BASE_URL}/attend/month`, {
         headers: {
-          Authorization: ACCESS_TOKEN,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
 
-      const list: Attendance[] = await res.json();
-
+      const list: Attendance[] = response.data;
       const map: Record<string, boolean> = {};
 
       list.forEach((item) => {
-        // "2025-11-05" → "2025-11-05"
         map[item.checkinDate] = true;
       });
 
@@ -74,23 +97,20 @@ const MyPageCalendar: React.FC = () => {
       fullDate: string;
     }[] = [];
 
-    // 지난달 일부
     const prevLast = new Date(currentYear, currentMonth - 1, 0);
-    const prevDays = first.getDay(); // 0~6 (일~토)
+    const prevDays = first.getDay();
 
     for (let i = prevLast.getDate() - prevDays + 1; i <= prevLast.getDate(); i++) {
       const full = `${currentYear}-${String(currentMonth - 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
       days.push({ date: i, muted: true, fullDate: full });
     }
 
-    // 이번달
     for (let d = 1; d <= last.getDate(); d++) {
       const full = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
       days.push({ date: d, muted: false, fullDate: full });
     }
 
-    // 다음달 일부
-    const nextDays = 42 - days.length; // 6주 × 7칸 = 42
+    const nextDays = 42 - days.length;
     for (let i = 1; i <= nextDays; i++) {
       const full = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
       days.push({ date: i, muted: true, fullDate: full });
@@ -107,7 +127,8 @@ const MyPageCalendar: React.FC = () => {
 
   return (
     <div className="main-container">
-      {/* 상단바 */}
+
+      {/* ⭐ 상단바 */}
       <header className="navbar">
         <div className="nav-inner">
           <div className="nav-left">
@@ -116,17 +137,24 @@ const MyPageCalendar: React.FC = () => {
             </div>
             <span className="nav-title">CARYOU</span>
           </div>
+
           <div className="nav-right">
             <Link to="/" className="nav-item">홈</Link>
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
-            <Link to="/login" className="login-btn">로그인</Link>
+
+            {/* ⭐ 로그인 여부에 따라 버튼 변경 */}
+            {isTokenExist() ? (
+              <button onClick={logout} className="login-btn">로그아웃</button>
+            ) : (
+              <Link to="/login" className="login-btn">로그인</Link>
+            )}
           </div>
         </div>
       </header>
 
       <main className="mypage-content">
-        
+
         {/* 프로필 */}
         <section className="profile-card">
           <div className="profile-left">
@@ -146,10 +174,9 @@ const MyPageCalendar: React.FC = () => {
           <Link to="/mypage/settings" className="tab-pill">설정</Link>
         </section>
 
-        {/* 캘린더 카드 */}
+        {/* 캘린더 */}
         <section className="calendar-section">
           <div className="card calendar-card">
-
             <div className="section-header">
               <div className="section-header-icon calendar"><span>📅</span></div>
               <span className="section-header-title">활동 캘린더</span>
@@ -157,7 +184,6 @@ const MyPageCalendar: React.FC = () => {
 
             <div className="calendar-header-row">
               <div></div>
-
               <div className="calendar-month-nav">
                 <button className="month-arrow" onClick={goPrevMonth}>{'<'}</button>
                 <span className="calendar-month-text">
@@ -167,7 +193,6 @@ const MyPageCalendar: React.FC = () => {
               </div>
             </div>
 
-            {/* 캘린더 그리드 */}
             <div className="calendar-grid">
               {['일','월','화','수','목','금','토'].map((w)=>( 
                 <div key={w} className="calendar-weekday">{w}</div>
@@ -196,7 +221,6 @@ const MyPageCalendar: React.FC = () => {
               })}
             </div>
 
-            {/* 범례 */}
             <div className="calendar-legend">
               <div className="legend-item">
                 <span className="legend-dot legend-dot-green" />

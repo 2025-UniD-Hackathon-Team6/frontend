@@ -1,10 +1,39 @@
 // pages/mypage/mypageMood.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "../../style/main/mainpage.css";
 import "../../style/mypage/mypage.css";
 
+const BASE_URL = "http://52.79.172.1:4000";
+
 const MyPageMood: React.FC = () => {
+  /** ⭐ 로그인 여부 */
+  const isTokenExist = () => {
+    return !!localStorage.getItem("accessToken");
+  };
+
+  /** ⭐ 로그아웃 */
+  const logout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(response);
+      localStorage.removeItem("accessToken");
+      alert("로그아웃 성공");
+    } catch (error) {
+      alert("로그아웃 요청 실패 (404)");
+    }
+  };
+
   return (
     <div className="main-container">
       {/* 상단바 */}
@@ -21,7 +50,13 @@ const MyPageMood: React.FC = () => {
             <Link to="/" className="nav-item">홈</Link>
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
-            <Link to="/login" className="login-btn">로그인</Link>
+
+            {/* ⭐ 로그인 상태별 버튼 교체 */}
+            {isTokenExist() ? (
+              <button onClick={logout} className="login-btn">로그아웃</button>
+            ) : (
+              <Link to="/login" className="login-btn">로그인</Link>
+            )}
           </div>
         </div>
       </header>
@@ -48,11 +83,10 @@ const MyPageMood: React.FC = () => {
           <Link to="/mypage/settings" className="tab-pill">설정</Link>
         </section>
 
-        {/* ===== 아래부터 '대시보드 레이아웃 구조 그대로' 적용 ===== */}
-        {/* 왼쪽 카드 / 오른쪽 카드 2열 구조 */}
+        {/* 그리드 */}
         <section className="mypage-grid">
           
-          {/* 왼쪽 ― 스트레스 기반 학습 미션 */}
+          {/* 왼쪽 카드 ― 스트레스 기반 미션 */}
           <div className="card mission-card">
             <div className="mood-card-header">
               <div className="mood-icon-circle">
@@ -85,7 +119,7 @@ const MyPageMood: React.FC = () => {
             </div>
           </div>
 
-          {/* 오른쪽 ― 최근 기분 기록 */}
+          {/* 오른쪽 카드 ― 최근 기분 기록 */}
           <div className="card mood-recent-card">
             <div className="mood-card-header">
               <div className="mood-icon-circle">
