@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import '../../style/main/mainpage.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type MoodType = "sad" | "soso" | "neutral" | "happy" | "great";
 
@@ -79,8 +81,6 @@ const MainPage: React.FC = () => {
     const [y, m, d] = iso.split("-");
     return `${y}년 ${Number(m)}월 ${Number(d)}일`;
   };
-
-  const stripMd = (t?: string) => t?.replace(/\*\*/g, "") ?? "";
 
   /** ⭐ 기분 제출 */
   const submitMood = async () => {
@@ -255,8 +255,12 @@ const MainPage: React.FC = () => {
 
             <div className="keyword-main">
               <div className="keyword-main-icon-circle"><span>🤖</span></div>
-              <div className="keyword-main-title">{dailyKeyword ? stripMd(dailyKeyword.keyword) : ""}</div>
-              <div className="keyword-main-desc">{dailyKeyword ? stripMd(dailyKeyword.description) : ""}</div>
+              <div className="keyword-main-title">
+                {dailyKeyword && <ReactMarkdown remarkPlugins={[remarkGfm]}>{dailyKeyword.keyword}</ReactMarkdown>}
+              </div>
+              <div className="keyword-main-desc">
+                {dailyKeyword && <ReactMarkdown remarkPlugins={[remarkGfm]}>{dailyKeyword.description}</ReactMarkdown>}
+              </div>
             </div>
           </div>
         </section>
@@ -272,8 +276,12 @@ const MainPage: React.FC = () => {
             <div className="report-header">
               <div className="report-icon-circle"><span>📈</span></div>
               <div className="report-text-wrap">
-                <div className="report-title">{dailyReport ? stripMd(dailyReport.title) : ""}</div>
-                <div className="report-desc">{dailyReport ? stripMd(dailyReport.summary) : ""}</div>
+                <div className="report-title">
+                  {dailyReport && <ReactMarkdown remarkPlugins={[remarkGfm]}>{dailyReport.title}</ReactMarkdown>}
+                </div>
+                <div className="report-desc">
+                  {dailyReport && <ReactMarkdown remarkPlugins={[remarkGfm]}>{dailyReport.summary}</ReactMarkdown>}
+                </div>
 
                 <div className="report-tags">
                   <span className="tag tag-blue">#{dailyReport?.position.category}</span>
@@ -287,7 +295,9 @@ const MainPage: React.FC = () => {
                 리포트 자세히 읽기
               </button>
             ) : (
-              <div className="report-full-box">{stripMd(dailyReport?.content)}</div>
+              <div className="report-full-box markdown-content">
+                {dailyReport && <ReactMarkdown remarkPlugins={[remarkGfm]}>{dailyReport.content}</ReactMarkdown>}
+              </div>
             )}
           </div>
         </section>
