@@ -103,6 +103,17 @@ const Community: React.FC = () => {
   const [formContent, setFormContent] = useState('');
   const [formTags, setFormTags] = useState('');
 
+  /** ⭐ 로그인 여부 확인 */
+  const isTokenExist = () => {
+    return !!localStorage.getItem("accessToken");
+  };
+
+  /** ⭐ 로그아웃 */
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    alert("로그아웃 되었습니다.");
+  };
+
   const handleToggleLike = (id: number) => {
     setPosts(prev =>
       prev.map(p =>
@@ -178,7 +189,6 @@ const Community: React.FC = () => {
 
   const handleWriteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 여기서는 실제 저장 기능 없이 UI만 구현 – 나중에 API 연동 시 이 안에서 처리하면 됨.
     console.log('새 글 데이터', {
       category: formCategory,
       title: formTitle,
@@ -202,7 +212,13 @@ const Community: React.FC = () => {
             <Link to="/" className="nav-item">홈</Link>
             <Link to="/mypage" className="nav-item">마이페이지</Link>
             <Link to="/community" className="nav-item nav-item-active">커뮤니티</Link>
-            <Link to="/login" className="login-btn">로그인</Link>
+
+            {/* ⭐ 여기만 수정됨 (로그인/로그아웃 전환) */}
+            {isTokenExist() ? (
+              <button onClick={logout} className="login-btn">로그아웃</button>
+            ) : (
+              <Link to="/login" className="login-btn">로그인</Link>
+            )}
           </div>
         </div>
       </header>
@@ -274,7 +290,6 @@ const Community: React.FC = () => {
             <form className="write-card" onSubmit={handleWriteSubmit}>
               <h2 className="write-title">새 글 작성</h2>
 
-              {/* 카테고리 */}
               <div className="write-field-group">
                 <label className="write-label">카테고리</label>
                 <select
@@ -290,7 +305,6 @@ const Community: React.FC = () => {
                 </select>
               </div>
 
-              {/* 제목 */}
               <div className="write-field-group">
                 <label className="write-label">제목</label>
                 <input
@@ -301,7 +315,6 @@ const Community: React.FC = () => {
                 />
               </div>
 
-              {/* 내용 */}
               <div className="write-field-group">
                 <label className="write-label">내용</label>
                 <textarea
@@ -312,7 +325,6 @@ const Community: React.FC = () => {
                 />
               </div>
 
-              {/* 태그 */}
               <div className="write-field-group">
                 <label className="write-label">태그</label>
                 <input
@@ -323,7 +335,6 @@ const Community: React.FC = () => {
                 />
               </div>
 
-              {/* 버튼들 */}
               <div className="write-actions">
                 <button className="write-submit-btn" type="submit">
                   <span className="write-submit-icon">📨</span>
@@ -401,7 +412,7 @@ const Community: React.FC = () => {
             </article>
           ))}
 
-          {/* 페이지네이션 (모양만) */}
+          {/* 페이지네이션 */}
           <div className="community-pagination">
             <button className="page-btn" disabled>
               ◀

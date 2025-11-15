@@ -17,6 +17,85 @@
   box-sizing: border-box;
 }
 
+/* 모달 배경 */
+.mood-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* 모달 박스 */
+.mood-modal {
+  width: 480px;
+  background: white;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+  text-align: center;
+  animation: fadeIn 0.28s ease-out;
+}
+
+/* 타이틀 */
+.mood-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+/* 이모지 컨테이너 */
+.mood-icons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 0 12px;
+}
+
+/* 이모지 */
+.mood-icon {
+  font-size: 40px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.mood-icon:hover {
+  transform: scale(1.2);
+}
+
+/* 선택 상태 */
+.mood-icon.selected {
+  transform: scale(1.35);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+
+/* 버튼 */
+.mood-submit-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: #4f7df3;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mood-submit-btn:disabled {
+  background: #c8d0e6;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
 /* 상단바 */
 .navbar {
   width: 100%;
