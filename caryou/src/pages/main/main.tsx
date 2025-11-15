@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../style/main/main.css";
+import { useNavigate } from "react-router-dom";
 
 const todayKeyword = {
   title: "AI 생산성 혁신",
@@ -26,6 +27,8 @@ const jobs = [
 ];
 
 const Main: React.FC = () => {
+  const navigate = useNavigate();
+
   const [showDailyPopup, setShowDailyPopup] = useState(true);
   const [mood, setMood] = useState<string | null>(null);
 
@@ -42,7 +45,8 @@ const Main: React.FC = () => {
         </div>
 
         <nav className="nav-buttons">
-          <button>마이페이지</button>
+          <button onClick={() => navigate("/")}>홈</button>
+          <button onClick={() => navigate("/mypage")}>마이페이지</button>
           <button>커뮤니티</button>
           <button className="primary">오늘의 루틴</button>
         </nav>
