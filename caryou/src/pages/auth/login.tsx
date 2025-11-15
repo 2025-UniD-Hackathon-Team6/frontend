@@ -7,36 +7,48 @@ import "../../style/auth/signup.css";
 const Login: React.FC = () => {
   //const navigate = useNavigate();
 
-  const [message, setMessage] = useState('없음');
+  const [message, setMessage] = useState('');
   const [inputs, setInputs] = useState({ id: "", password: "" });
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); // 💡 폼 제출 시 페이지 새로고침을 막습니다.
-    setMessage('없음'); // 로그인 시도 시 메시지 초기화
+    e.preventDefault(); 
+    setMessage(''); // 로그인 시도 시 메시지 초기화
+
     try {
-      const response = await axios.post('http://52.79.172.1:4000/', {
-        username: inputs.id,
+      // 💡 API 경로를 /login으로 변경하는 것이 일반적이며 권장됩니다.
+      const response = await axios.post('http://52.79.172.1:4000/auth/login', { 
+        name: inputs.id,
         password: inputs.password,
       });
-      const { access_token } = response.data;
-      // 1. JWT 저장
-      localStorage.setItem('accessToken', access_token);
-      // 2. 인증 상태 업데이트 및 리다이렉트
-      // ...
+      localStorage.setItem('accessToken', response.data["accessToken"]);
+      
+      alert("로그인 성공!");
+      navigate("/"); // 로그인 성공 시 리다이렉션
+      
     } catch (error) {
       console.error('로그인 실패:', error);
-        if(error.isAxiosError) {
-          if(error.response.status == 403) { // 비번 불일치
-            setMessage('비밀번호 불일치');
+      if (axios.isAxiosError(error)) {
+        // 이 블록 안에서 error는 AxiosError 타입으로 간주됩니다.
+        
+        if (error.response) {
+          const status = error.response.status;
+
+          if (status === 403) { 
+            setMessage('비밀번호가 일치하지 않습니다.');
+          } else if (status === 404) {
+            setMessage('사용자가 존재하지 않습니다.');
+          } else {
+            setMessage(`서버 통신 오류: ${status}`);
           }
-          else if(error.response.status == 404) { // 존재하지 않는 사용자
-            setMessage('존재하지 않는 사용자');
-          }
-          else { // 예상치 못한 오류 발생
-            setMessage('예상치 못한 오류 발생');
-          }
+        } else if (error.request) {
+            setMessage('서버에 연결할 수 없습니다. 네트워크 상태를 확인하세요.');
+        }
+      } 
+      // 💡 AxiosError가 아닌 일반 Error 객체 처리
+      else if (error instanceof Error) {
+        setMessage(`클라이언트 오류: ${error.message}`);
       }
-      console.log(message);
     }
   };
 
@@ -44,12 +56,6 @@ const Login: React.FC = () => {
     const { name, value } = e.target;
     setInputs((prev) => ({ ...prev, [name]: value }));
   };
-
-  {/*const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert("로그인 성공!");
-    navigate("/"); // ▶ 메인페이지로 이동
-  };*/}
 
 
   return (

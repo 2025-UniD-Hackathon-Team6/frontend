@@ -1,8 +1,33 @@
 import React from 'react';
 import '../../style/main/mainpage.css';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const MainPage: React.FC = () => {
+  console.log("ccc");
+  console.log(localStorage.getItem("accessToken"));
+  console.log(!!localStorage.getItem("accessToken"));
+
+  const isTokenExist = () => {
+    return !!localStorage.getItem("accessToken");
+  }
+  const logout = async (e: React.FormEvent) => {
+    e.preventDefault(); 
+    try {
+      console.log(`Bearer ${localStorage.getItem("accessToken")}`);
+      const response = await axios.post('http://52.79.172.1:4000/auth/logout', {}, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+        } 
+      });
+      console.log(response);
+      localStorage.removeItem("accessToken");
+      alert("로그아웃 성공");
+    } catch(error) {
+      alert("404 에러 발생!!");
+    }
+  }
+      
   return (
     <div className="main-container">
       {/* 상단바 */}
@@ -19,7 +44,9 @@ const MainPage: React.FC = () => {
             <Link to="/" className="nav-item nav-item-active">홈</Link>
             <Link to="/mypage" className="nav-item">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
-            <Link to="/login" className="login-btn">로그인</Link>
+            <nav>{
+              isTokenExist() ? <button onClick={logout} className='login-btn'> 로그아웃 </button>
+            : <Link to="/login" className='login-btn'>로그인</Link>}</nav>
           </div>
         </div>
       </header>

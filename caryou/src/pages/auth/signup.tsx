@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../style/auth/signup.css";
+import axios from "axios";
 
 type BasicInputs = {
   name: string;
@@ -64,6 +65,11 @@ const Signup: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const response = await axios.post('http://52.79.172.1:4000/auth/register', { 
+        name: basic.email,
+        password: ,
+      });
     alert("가입 완료!");
     navigate("/"); // ▶ 메인페이지로 즉시 이동
   };
@@ -91,7 +97,7 @@ const Signup: React.FC = () => {
               <h2 className="form-title">기본 정보를 입력해주세요</h2>
               <div className="form-grid">
                 <input name="name" placeholder="이름" onChange={handleBasicChange} />
-                <input name="email" placeholder="이메일" onChange={handleBasicChange} />
+                <input name="id" placeholder="아이디" onChange={handleBasicChange} />
                 <input name="password" placeholder="비밀번호" onChange={handleBasicChange} />
                 <input
                   name="passwordConfirm"
