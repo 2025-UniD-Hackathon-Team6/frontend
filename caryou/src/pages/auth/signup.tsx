@@ -76,7 +76,6 @@ const Signup: React.FC = () => {
         password: basic.password,
       });
       localStorage.setItem('accessToken', response2.data["accessToken"]);
-    alert("가입 완료!");
     navigate("/"); // ▶ 메인페이지로 즉시 이동
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
@@ -108,10 +107,11 @@ const Signup: React.FC = () => {
               <div className="form-grid">
                 <input name="name" placeholder="이름" onChange={handleBasicChange} />
                 <input name="id" placeholder="아이디" onChange={handleBasicChange} />
-                <input name="password" placeholder="비밀번호" onChange={handleBasicChange} />
+                <input name="password" placeholder="비밀번호" type="password" onChange={handleBasicChange} />
                 <input
                   name="passwordConfirm"
                   placeholder="비밀번호 확인"
+                  type="password"
                   onChange={handleBasicChange}
                 />
                 <input name="phone" placeholder="전화번호" onChange={handleBasicChange} />

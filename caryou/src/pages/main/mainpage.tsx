@@ -45,6 +45,10 @@ const moodToStressLevel = (mood: MoodType): string => {
     case "happy": return "Low";
     case "great": return "ExtremelyLow";
     default: return "Middle";
+      
+const MainPage: React.FC = () => {
+  const isTokenExist = () => {
+    return !!localStorage.getItem("accessToken");
   }
 };
 
@@ -112,6 +116,11 @@ const MainPage: React.FC = () => {
     } catch (e) {
       console.error("submitMood error:", e);
       setShowMoodModal(false);
+      console.log(response);
+      localStorage.removeItem("accessToken");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch(error) {
+      alert("404 에러 발생!!");
     }
   };
 
