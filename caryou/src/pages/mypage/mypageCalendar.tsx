@@ -81,7 +81,7 @@ const MyPageCalendar: React.FC = () => {
       const map: Record<string, boolean> = {};
 
       list.forEach((item) => {
-        map[item.checkinDate] = true;
+        map[item.checkinDate.split('T')[0]] = true;
       });
 
       setAttendanceMap(map);
@@ -223,6 +223,8 @@ const MyPageCalendar: React.FC = () => {
 
               {calendarDays.map((d, idx) => {
                 const isToday = d.fullDate === today.toISOString().slice(0, 10);
+                console.log(attendanceMap);
+                console.log(calendarDays);
                 const isAttended = attendanceMap[d.fullDate] === true;
 
                 return (
