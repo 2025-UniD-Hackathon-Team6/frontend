@@ -196,7 +196,7 @@ const MainPage: React.FC = () => {
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
     alert("로그아웃 되었습니다!");
-    navigate("/login");
+    navigate("/");
   };
 
   return (

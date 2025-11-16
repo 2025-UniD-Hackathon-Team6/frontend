@@ -70,7 +70,7 @@ const MyPageMood: React.FC = () => {
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
     alert("로그아웃 성공");
-    navigate("/login");
+    navigate("/");
   };
 
   /** ⭐ 사용자 프로필 */
@@ -153,7 +153,7 @@ const MyPageMood: React.FC = () => {
                 로그아웃
               </button>
             ) : (
-              <Link to="/login" className="login-btn">
+              <Link to="/" className="login-btn">
                 로그인
               </Link>
             )}
