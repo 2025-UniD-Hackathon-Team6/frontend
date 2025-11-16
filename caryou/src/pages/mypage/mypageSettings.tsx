@@ -35,7 +35,7 @@ const MyPageSettings: React.FC = () => {
 
   /** ⭐ 사용자 정보 저장 */
   const [userName, setUserName] = useState("사용자");
-  const [userEmail, setUserEmail] = useState("ex@example.com");
+  const [userEmail, setUserEmail] = useState("noonsong@example.com");
 
   /** ⭐ 프로필 불러오기 */
   const loadProfile = async () => {

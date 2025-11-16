@@ -1,6 +1,6 @@
 // pages/mypage/mypage.tsx  (대시보드 화면)
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../../style/main/mainpage.css';
 import '../../style/mypage/mypage.css';
 import axios from 'axios';
@@ -8,22 +8,22 @@ import axios from 'axios';
 const BASE_URL = "http://52.79.172.1:4000";
 
 const MyPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  /* ⭐ 로그인 상태 (UI 즉시 반영) */
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("accessToken"));
+  const [weeklyCount, setWeeklyCount] = useState(0);
+  const [weeklyDays, setWeeklyDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
 
   /* ⭐ 프로필 이름 */
   const [userName, setUserName] = useState<string>("사용자");
 
-  const [weeklyCount, setWeeklyCount] = useState(0);
-  const [weeklyDays, setWeeklyDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
+  /* 로그인 여부 확인 */
+  const isTokenExist = () => {
+    return !!localStorage.getItem("accessToken");
+  };
 
-  /* ⭐ 로그아웃 */
+  /* 로그아웃 */
   const logout = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
+      const response = await axios.post(
         `${BASE_URL}/auth/logout`,
         {},
         {
@@ -32,18 +32,19 @@ const MyPage: React.FC = () => {
           },
         }
       );
-    } catch {}
 
-    localStorage.removeItem("accessToken");
-    setIsLoggedIn(false);  // ⭐ UI 즉시 변경
-    alert("로그아웃 성공");
-    navigate("/login");
+      console.log(response);
+      localStorage.removeItem("accessToken");
+      alert("로그아웃 성공");
+    } catch (error) {
+      alert("로그아웃 요청 실패 (404)");
+    }
   };
 
   /* -------- 날짜 유틸 -------- */
   const getWeekRange = () => {
     const today = new Date();
-    const day = today.getDay();
+    const day = today.getDay(); // 일:0 ~ 토:6
     const diffToMonday = (day === 0 ? -6 : 1 - day);
 
     const monday = new Date(today);
@@ -55,7 +56,7 @@ const MyPage: React.FC = () => {
     return { monday, sunday };
   };
 
-  /* -------- 월간 출석 -------- */
+  /* -------- 월간 출석 API (로컬 날짜 파싱 적용) -------- */
   const loadAttendance = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/attend/month`, {
@@ -67,7 +68,7 @@ const MyPage: React.FC = () => {
       const list = response.data;
 
       const today = new Date();
-      const weekday = today.getDay();
+      const weekday = today.getDay(); // 일:0~토:6
       const diffToMonday = (weekday === 0 ? -6 : 1 - weekday);
 
       const monday = new Date(today);
@@ -76,6 +77,7 @@ const MyPage: React.FC = () => {
       const sunday = new Date(monday);
       sunday.setDate(monday.getDate() + 6);
 
+      // YYYY-MM-DD 포맷으로 변환
       const format = (d: Date) =>
         `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
           d.getDate()
@@ -87,7 +89,7 @@ const MyPage: React.FC = () => {
       const flags = [false, false, false, false, false, false, false];
 
       const thisWeek = list.filter((item: any) => {
-        const d = item.checkinDate; // YYYY-MM-DD 형태
+        const d = item.checkinDate; // 이미 YYYY-MM-DD
         return d >= mondayStr && d <= sundayStr;
       });
 
@@ -101,13 +103,13 @@ const MyPage: React.FC = () => {
       });
 
       setWeeklyDays(flags);
-
     } catch (e) {
       console.error("Attendance load error:", e);
     }
   };
 
-  /* ⭐ 프로필 API */
+
+  /* ⭐ 프로필 API 호출 */
   const loadProfile = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/auth/profile`, {
@@ -116,24 +118,22 @@ const MyPage: React.FC = () => {
         }
       });
 
-      if (res.data?.name) setUserName(res.data.name);
+      if (res.data?.name) {
+        setUserName(res.data.name);
+      }
 
     } catch (e) {
       console.error("프로필 불러오기 실패:", e);
     }
   };
 
-  /* ⭐ 최초 렌더링 */
   useEffect(() => {
-    if (isLoggedIn) {
-      loadProfile();
-      loadAttendance();
-    }
-  }, [isLoggedIn]);
+    loadProfile();
+    loadAttendance();
+  }, []);
 
   return (
     <div className="main-container">
-
       {/* 상단바 */}
       <header className="navbar">
         <div className="nav-inner">
@@ -149,8 +149,7 @@ const MyPage: React.FC = () => {
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
 
-            {/* ⭐ 로그인/로그아웃 전환 */}
-            {isLoggedIn ? (
+            {isTokenExist() ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
               <Link to="/login" className="login-btn">로그인</Link>
@@ -170,7 +169,7 @@ const MyPage: React.FC = () => {
             </div>
             <div className="profile-text">
               <div className="profile-name">{userName}님</div>
-              <div className="profile-email">ex@example.com</div>
+              <div className="profile-email">noonsong@example.com</div>
             </div>
           </div>
         </section>
