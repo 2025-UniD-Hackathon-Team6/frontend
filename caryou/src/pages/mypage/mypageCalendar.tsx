@@ -45,7 +45,7 @@ const MyPageCalendar: React.FC = () => {
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);   // UI 즉시 반영
     alert("로그아웃 성공");
-    navigate("/login");     // 로그인 페이지 이동
+    navigate("/");     // 로그인 페이지 이동
   };
 
   /** ⭐ API: 사용자 프로필 */

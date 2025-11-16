@@ -1,6 +1,6 @@
 // pages/mypage/mypage.tsx  (대시보드 화면)
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../style/main/mainpage.css';
 import '../../style/mypage/mypage.css';
 import axios from 'axios';
@@ -8,6 +8,8 @@ import axios from 'axios';
 const BASE_URL = "http://52.79.172.1:4000";
 
 const MyPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const [weeklyCount, setWeeklyCount] = useState(0);
   const [weeklyDays, setWeeklyDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
 
@@ -36,6 +38,7 @@ const MyPage: React.FC = () => {
       console.log(response);
       localStorage.removeItem("accessToken");
       alert("로그아웃 성공");
+      navigate("/");
     } catch (error) {
       alert("로그아웃 요청 실패 (404)");
     }
