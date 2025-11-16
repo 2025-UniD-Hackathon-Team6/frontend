@@ -170,7 +170,7 @@ const MyPage: React.FC = () => {
             </div>
             <div className="profile-text">
               <div className="profile-name">{userName}님</div>
-              <div className="profile-email">noonsong@example.com</div>
+              <div className="profile-email">ex@example.com</div>
             </div>
           </div>
         </section>
