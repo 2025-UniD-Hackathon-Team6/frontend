@@ -76,7 +76,7 @@ const Signup: React.FC = () => {
         password: basic.password,
       });
       localStorage.setItem('accessToken', response2.data["accessToken"]);
-    navigate("/"); // ▶ 메인페이지로 즉시 이동
+    navigate("/main"); // ▶ 메인페이지로 즉시 이동
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       alert("404 에러 발생",);

@@ -208,7 +208,7 @@ const Community: React.FC = () => {
       title: formTitle,
       content: formContent,
       tags: formTags ? formTags.split(" ").map(t => t.trim()) : [],
-      author: "익명 사용자",
+      author: "ii",
       likes: 0,
       comments: 0,
       liked: false,

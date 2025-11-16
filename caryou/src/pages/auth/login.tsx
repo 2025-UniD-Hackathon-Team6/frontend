@@ -23,7 +23,7 @@ const Login: React.FC = () => {
       });
       localStorage.setItem('accessToken', response.data["accessToken"]);
       
-      navigate("/"); // 로그인 성공 시 리다이렉션
+      navigate("/main"); // 로그인 성공 시 리다이렉션
       
     } catch (error) {
       console.error('로그인 실패:', error);

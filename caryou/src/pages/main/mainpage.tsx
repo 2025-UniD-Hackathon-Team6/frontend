@@ -49,7 +49,7 @@ const moodToStressLevel = (mood: MoodType): string => {
   }
 };
 
-/** ⭐ 직무명 → 아이콘 매핑 */
+/** ⭐ 직무명 → 이모지 */
 const getPositionEmoji = (positionName: string = "") => {
   const name = positionName.toLowerCase();
 
@@ -103,6 +103,7 @@ const MainPage: React.FC = () => {
     } catch (e) {
       console.error("submitMood error:", e);
       localStorage.removeItem("accessToken");
+      setIsLoggedIn(false);
       alert("서버 오류가 발생했습니다.");
     }
   };
@@ -117,7 +118,6 @@ const MainPage: React.FC = () => {
       });
 
       if (Array.isArray(res.data.jobs)) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mapped = res.data.jobs.map((job: any) => ({
           id: job.id,
           title: job.title,
@@ -135,40 +135,45 @@ const MainPage: React.FC = () => {
     }
   };
 
-  /** ⭐ 전체 로딩 */
+  /** ⭐ 전체 데이터 로딩 */
   useEffect(() => {
-    const fetchAll = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) return;
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token); // 🔥 로그인 UI 즉시 반영
 
+    if (!token) return;
+
+    const fetchAll = async () => {
       try {
+        // 1. 출석 확인
         const attendRes = await fetch(`${BASE_URL}/attend/today`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         let attendJson = null;
-
         if (attendRes.ok) {
           const text = await attendRes.text();
           if (text) {
-            try { attendJson = JSON.parse(text); } catch { /* empty */ }
+            try { attendJson = JSON.parse(text); } catch {}
           }
         }
 
         if (!attendJson) setShowMoodModal(true);
 
+        // 2. 키워드
         const kRes = await fetch(`${BASE_URL}/api/daily/keyword`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (kRes.ok) setDailyKeyword(await kRes.json());
 
+        // 3. 리포트
         const rRes = await fetch(`${BASE_URL}/api/daily/report`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (rRes.ok) setDailyReport(await rRes.json());
 
+        // 4. 추천 공고
         loadRecommendedJobs();
 
       } catch (err) {
@@ -177,9 +182,10 @@ const MainPage: React.FC = () => {
     };
 
     fetchAll();
-  }, []);
+  }, [isLoggedIn]); // 🔥 로그인 상태 바뀌면 UI 다시 그림
 
-  /** ⭐ 로그아웃 */
+
+  /** ⭐ 로그아웃 (UI 즉시 반영) */
   const logout = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -191,16 +197,17 @@ const MainPage: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
-    } catch { /* empty */ }
+    } catch {}
 
     localStorage.removeItem("accessToken");
-    setIsLoggedIn(false);
+    setIsLoggedIn(false); // 🔥 즉시 UI 업데이트
     alert("로그아웃 되었습니다!");
   };
 
   return (
     <div className="main-container">
-      {/* 모달 */}
+      
+      {/* ---------------- 모달 ---------------- */}
       {showMoodModal && isLoggedIn && (
         <div className="mood-modal-overlay">
           <div className="mood-modal">
@@ -219,7 +226,7 @@ const MainPage: React.FC = () => {
         </div>
       )}
 
-      {/* 상단바 */}
+      {/* ---------------- 네비게이션 ---------------- */}
       <header className="navbar">
         <div className="nav-inner">
           <div className="nav-left">
@@ -231,6 +238,7 @@ const MainPage: React.FC = () => {
             <Link to="/" className="nav-item nav-item-active">홈</Link>
             <Link to="/mypage" className="nav-item">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
+
             {isLoggedIn ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
@@ -240,9 +248,9 @@ const MainPage: React.FC = () => {
         </div>
       </header>
 
-      {/* 메인 */}
+      {/* ---------------- 메인 ---------------- */}
       <main className="main-content">
-        
+
         {/* 키워드 */}
         <section className="keyword-section">
           <div className="keyword-card">
