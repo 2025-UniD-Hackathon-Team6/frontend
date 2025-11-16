@@ -157,13 +157,13 @@ const MainPage: React.FC = () => {
 
         if (!attendJson) setShowMoodModal(true);
 
-        const kRes = await fetch(`${BASE_URL}/daily/keyword`, {
+        const kRes = await fetch(`${BASE_URL}/api/daily/keyword`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (kRes.ok) setDailyKeyword(await kRes.json());
 
-        const rRes = await fetch(`${BASE_URL}/daily/report`, {
+        const rRes = await fetch(`${BASE_URL}/api/daily/report`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

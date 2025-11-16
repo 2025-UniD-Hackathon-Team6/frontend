@@ -223,8 +223,6 @@ const MyPageCalendar: React.FC = () => {
 
               {calendarDays.map((d, idx) => {
                 const isToday = d.fullDate === today.toISOString().slice(0, 10);
-                console.log(attendanceMap);
-                console.log(calendarDays);
                 const isAttended = attendanceMap[d.fullDate] === true;
 
                 return (
