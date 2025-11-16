@@ -454,6 +454,127 @@
   background: #1d4ed8;
 }
 
+.report-full-box {
+  margin-top: 18px;
+  padding: 20px 24px;
+  background: #f9fafb;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #374151;
+}
+
+/* 마크다운 스타일 */
+.markdown-content p,
+.keyword-main-title p,
+.keyword-main-desc p,
+.report-title p,
+.report-desc p {
+  margin: 0 0 12px 0;
+  line-height: 1.7;
+}
+
+.markdown-content p:last-child,
+.keyword-main-title p:last-child,
+.keyword-main-desc p:last-child,
+.report-title p:last-child,
+.report-desc p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content strong,
+.keyword-main-title strong,
+.keyword-main-desc strong,
+.report-title strong,
+.report-desc strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.markdown-content em,
+.keyword-main-title em,
+.keyword-main-desc em,
+.report-title em,
+.report-desc em {
+  font-style: italic;
+  color: #374151;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+  font-weight: 700;
+  color: #111827;
+  margin: 18px 0 12px 0;
+  line-height: 1.4;
+}
+
+.markdown-content h1 { font-size: 24px; }
+.markdown-content h2 { font-size: 20px; }
+.markdown-content h3 { font-size: 18px; }
+.markdown-content h4 { font-size: 16px; }
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.markdown-content li {
+  margin: 6px 0;
+  line-height: 1.7;
+}
+
+.markdown-content a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+.markdown-content code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.markdown-content pre {
+  background: #1f2937;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 13px;
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid #2563eb;
+  padding-left: 16px;
+  margin: 12px 0;
+  color: #4b5563;
+  font-style: italic;
+}
+
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 20px 0;
+}
+
 /* 직무 추천 섹션 */
 .job-section {
   width: 100%;
