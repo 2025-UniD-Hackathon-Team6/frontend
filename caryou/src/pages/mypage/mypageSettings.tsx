@@ -1,5 +1,5 @@
 // pages/mypage/MyPageSettings.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import '../../style/main/mainpage.css';
@@ -9,7 +9,7 @@ const BASE_URL = "http://52.79.172.1:4000";
 
 const MyPageSettings: React.FC = () => {
 
-  /** ⭐ 로그인 여부 체크 */
+  /** ⭐ 로그인 여부 */
   const isTokenExist = () => {
     return !!localStorage.getItem("accessToken");
   };
@@ -18,16 +18,14 @@ const MyPageSettings: React.FC = () => {
   const logout = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      await axios.post(
         `${BASE_URL}/auth/logout`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         }
       );
-      console.log(response);
+
       localStorage.removeItem("accessToken");
       alert("로그아웃 성공");
     } catch (error) {
@@ -35,10 +33,32 @@ const MyPageSettings: React.FC = () => {
     }
   };
 
+  /** ⭐ 사용자 정보 저장 */
+  const [userName, setUserName] = useState("사용자");
+  const [userEmail, setUserEmail] = useState("noonsong@example.com");
+
+  /** ⭐ 프로필 불러오기 */
+  const loadProfile = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+      });
+
+      if (res.data?.name) setUserName(res.data.name);
+      if (res.data?.email) setUserEmail(res.data.email);
+    } catch (error) {
+      console.error("프로필 로딩 실패:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
   return (
     <div className="main-container">
 
-      {/* 상단바 – 로그인 상태 반영 */}
+      {/* 상단바 */}
       <header className="navbar">
         <div className="nav-inner">
           <div className="nav-left">
@@ -53,7 +73,6 @@ const MyPageSettings: React.FC = () => {
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
 
-            {/* 로그인 여부에 따라 버튼 변경 */}
             {isTokenExist() ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
@@ -65,15 +84,15 @@ const MyPageSettings: React.FC = () => {
 
       <main className="mypage-content">
 
-        {/* 프로필 카드 */}
+        {/* ⭐ 프로필 카드 */}
         <section className="profile-card">
           <div className="profile-left">
             <div className="profile-avatar-circle">
               <span>👤</span>
             </div>
             <div className="profile-text">
-              <div className="profile-name">김철수님</div>
-              <div className="profile-email">cheolsoo@example.com</div>
+              <div className="profile-name">{userName}님</div>
+              <div className="profile-email">{userEmail}</div>
             </div>
           </div>
         </section>
@@ -86,10 +105,10 @@ const MyPageSettings: React.FC = () => {
           <Link to="/mypage/settings" className="tab-pill tab-pill-active">설정</Link>
         </section>
 
-        {/* 설정 메인 그리드 */}
+        {/* ⭐ 설정 그리드 */}
         <section className="settings-grid">
 
-          {/* 프로필 설정 카드 */}
+          {/* 왼쪽 카드 - 프로필 설정 */}
           <div className="card settings-card settings-card-left">
             <div className="section-header">
               <div className="section-header-icon profile">
@@ -101,12 +120,24 @@ const MyPageSettings: React.FC = () => {
             <form className="settings-form">
               <div className="settings-field">
                 <label htmlFor="name" className="settings-label">이름</label>
-                <input id="name" type="text" className="settings-input" defaultValue="김철수" />
+                <input
+                  id="name"
+                  type="text"
+                  className="settings-input"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                />
               </div>
 
               <div className="settings-field">
                 <label htmlFor="email" className="settings-label">이메일</label>
-                <input id="email" type="email" className="settings-input" defaultValue="cheolsoo@example.com" />
+                <input
+                  id="email"
+                  type="email"
+                  className="settings-input"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                />
               </div>
 
               <button type="button" className="settings-primary-btn">
@@ -115,7 +146,7 @@ const MyPageSettings: React.FC = () => {
             </form>
           </div>
 
-          {/* 관심 분야 수정 카드 */}
+          {/* 오른쪽 – 관심 분야 */}
           <div className="card settings-card settings-card-right">
             <div className="section-header">
               <div className="section-header-icon interest">

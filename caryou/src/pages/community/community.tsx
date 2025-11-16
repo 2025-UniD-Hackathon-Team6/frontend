@@ -96,24 +96,25 @@ const Community: React.FC = () => {
   const [sortKey, setSortKey] = useState<SortKey>('latest');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 글쓰기 폼 토글 & 폼 데이터
+  // 글쓰기 폼
   const [showWriteForm, setShowWriteForm] = useState(false);
   const [formCategory, setFormCategory] = useState('');
   const [formTitle, setFormTitle] = useState('');
   const [formContent, setFormContent] = useState('');
   const [formTags, setFormTags] = useState('');
 
-  /** ⭐ 로그인 여부 확인 */
+  /** 로그인 여부 */
   const isTokenExist = () => {
     return !!localStorage.getItem("accessToken");
   };
 
-  /** ⭐ 로그아웃 */
+  /** 로그아웃 */
   const logout = () => {
     localStorage.removeItem("accessToken");
     alert("로그아웃 되었습니다.");
   };
 
+  /** 좋아요 토글 */
   const handleToggleLike = (id: number) => {
     setPosts(prev =>
       prev.map(p =>
@@ -123,11 +124,12 @@ const Community: React.FC = () => {
               liked: !p.liked,
               likes: p.likes + (p.liked ? -1 : 1),
             }
-          : p,
-      ),
+          : p
+      )
     );
   };
 
+  /** 필터 + 정렬 + 검색 */
   const filteredPosts = useMemo(() => {
     let list = [...posts];
 
@@ -153,13 +155,12 @@ const Community: React.FC = () => {
       case 'comments':
         list.sort((a, b) => b.comments - a.comments);
         break;
-      default:
-        break;
     }
 
     return list;
   }, [posts, selectedCategory, sortKey, searchQuery]);
 
+  /** 카테고리 배지 색상 */
   const getCategoryBadgeClass = (key: CategoryKey) => {
     switch (key) {
       case 'career':
@@ -175,10 +176,12 @@ const Community: React.FC = () => {
     }
   };
 
+  /** 글쓰기 폼 토글 */
   const handleClickWriteButton = () => {
     setShowWriteForm(prev => !prev);
   };
 
+  /** 글쓰기 취소 */
   const handleWriteCancel = () => {
     setShowWriteForm(false);
     setFormCategory('');
@@ -187,19 +190,42 @@ const Community: React.FC = () => {
     setFormTags('');
   };
 
+  /** ⭐ 글 작성 → 맨 위에 새 글 추가 */
   const handleWriteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('새 글 데이터', {
-      category: formCategory,
+
+    if (!formCategory || !formTitle.trim() || !formContent.trim()) {
+      alert("카테고리, 제목, 내용을 모두 입력해주세요!");
+      return;
+    }
+
+    const newPost: CommunityPost = {
+      id: Date.now(),
+      category: formCategory as CategoryKey,
+      categoryLabel:
+        categoryOptions.find(c => c.key === formCategory)?.label || '',
+      daysAgo: 0,
       title: formTitle,
       content: formContent,
-      tags: formTags,
-    });
+      tags: formTags ? formTags.split(" ").map(t => t.trim()) : [],
+      author: "익명 사용자",
+      likes: 0,
+      comments: 0,
+      liked: false,
+    };
+
+    setPosts(prev => [newPost, ...prev]);
+
+    setFormCategory('');
+    setFormTitle('');
+    setFormContent('');
+    setFormTags('');
+    setShowWriteForm(false);
   };
 
   return (
     <div className="main-container">
-      {/* 상단바 – 홈과 동일 디자인 */}
+      {/* NAV */}
       <header className="navbar">
         <div className="nav-inner">
           <div className="nav-left">
@@ -213,7 +239,6 @@ const Community: React.FC = () => {
             <Link to="/mypage" className="nav-item">마이페이지</Link>
             <Link to="/community" className="nav-item nav-item-active">커뮤니티</Link>
 
-            {/* ⭐ 여기만 수정됨 (로그인/로그아웃 전환) */}
             {isTokenExist() ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
@@ -224,7 +249,8 @@ const Community: React.FC = () => {
       </header>
 
       <main className="community-main">
-        {/* 상단 타이틀 */}
+
+        {/* HERO */}
         <section className="community-hero">
           <h1 className="community-title">커뮤니티</h1>
           <p className="community-sub">
@@ -232,7 +258,7 @@ const Community: React.FC = () => {
           </p>
         </section>
 
-        {/* 검색 + 필터 + 글쓰기 */}
+        {/* 검색 + 필터 */}
         <section className="community-search-row">
           <div className="community-search-wrap">
             <span className="community-search-icon">🔍</span>
@@ -248,9 +274,7 @@ const Community: React.FC = () => {
             <select
               className="community-select"
               value={selectedCategory}
-              onChange={e =>
-                setSelectedCategory(e.target.value as CategoryKey)
-              }
+              onChange={e => setSelectedCategory(e.target.value as CategoryKey)}
             >
               {categoryOptions.map(opt => (
                 <option key={opt.key} value={opt.key}>
@@ -284,7 +308,7 @@ const Community: React.FC = () => {
           </div>
         </section>
 
-        {/* 글쓰기 폼 – 토글 */}
+        {/* 글쓰기 폼 */}
         {showWriteForm && (
           <section className="community-write-section">
             <form className="write-card" onSubmit={handleWriteSubmit}>
@@ -352,23 +376,18 @@ const Community: React.FC = () => {
           </section>
         )}
 
-        {/* 게시글 리스트 */}
+        {/* 게시글 LIST */}
         <section className="community-list">
           {filteredPosts.map(post => (
             <article key={post.id} className="post-card">
               <div className="post-card-inner">
                 <div className="post-header-row">
                   <span
-                    className={
-                      'post-category-badge ' +
-                      getCategoryBadgeClass(post.category)
-                    }
+                    className={'post-category-badge ' + getCategoryBadgeClass(post.category)}
                   >
                     {post.categoryLabel}
                   </span>
-                  <span className="post-days-ago">
-                    {post.daysAgo}일 전
-                  </span>
+                  <span className="post-days-ago">{post.daysAgo}일 전</span>
                 </div>
 
                 <h2 className="post-title">{post.title}</h2>
@@ -397,9 +416,7 @@ const Community: React.FC = () => {
                       type="button"
                     >
                       <span className="post-like-emoji">👍</span>
-                      <span className="post-like-count">
-                        {post.likes}
-                      </span>
+                      <span className="post-like-count">{post.likes}</span>
                     </button>
 
                     <div className="post-comment-stat">
@@ -414,13 +431,9 @@ const Community: React.FC = () => {
 
           {/* 페이지네이션 */}
           <div className="community-pagination">
-            <button className="page-btn" disabled>
-              ◀
-            </button>
+            <button className="page-btn" disabled>◀</button>
             <button className="page-btn page-btn-active">1</button>
-            <button className="page-btn" disabled>
-              ▶
-            </button>
+            <button className="page-btn" disabled>▶</button>
           </div>
         </section>
       </main>

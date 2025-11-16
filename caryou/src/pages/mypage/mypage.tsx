@@ -11,6 +11,9 @@ const MyPage: React.FC = () => {
   const [weeklyCount, setWeeklyCount] = useState(0);
   const [weeklyDays, setWeeklyDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
 
+  /* ⭐ 프로필 이름 */
+  const [userName, setUserName] = useState<string>("사용자");
+
   /* 로그인 여부 확인 */
   const isTokenExist = () => {
     return !!localStorage.getItem("accessToken");
@@ -92,7 +95,29 @@ const MyPage: React.FC = () => {
     }
   };
 
+  /* ⭐ 프로필 API 호출 */
+  const loadProfile = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      });
+
+      // 예: { name: "홍길동", email: "...", ... }
+      console.log("프로필 응답:", res.data);
+
+      if (res.data?.name) {
+        setUserName(res.data.name);
+      }
+
+    } catch (e) {
+      console.error("프로필 불러오기 실패:", e);
+    }
+  };
+
   useEffect(() => {
+    loadProfile();
     loadAttendance();
   }, []);
 
@@ -132,8 +157,8 @@ const MyPage: React.FC = () => {
               <span>👤</span>
             </div>
             <div className="profile-text">
-              <div className="profile-name">김철수님</div>
-              <div className="profile-email">cheolsu@example.com</div>
+              <div className="profile-name">{userName}님</div>
+              <div className="profile-email">noonsong@example.com</div>
             </div>
           </div>
         </section>
