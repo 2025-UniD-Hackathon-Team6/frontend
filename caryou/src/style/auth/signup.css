@@ -1,0 +1,338 @@
+/* 공통 레이아웃 */
+.signup-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eef2fd;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+
+  /* ✅ 위·아래 여백 넉넉하게 */
+  padding: 80px 0 96px;  /* 필요하면 숫자 더 키워도 됨 */
+  box-sizing: border-box;
+}
+
+
+.signup-container {
+  width: 640px;
+  text-align: center;
+}
+
+/* 로고 */
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111827;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-emoji {
+  font-size: 26px;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* 단계 표시 */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+
+.step {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #d5d5ff;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.step.active {
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+}
+
+/* 카드 박스 */
+.form-box {
+  background: #ffffff;
+  padding: 30px 32px 26px;
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+}
+
+/* 로그인용 박스는 마진 조금 위로 */
+.login-box {
+  margin-top: 16px;
+}
+
+.form-title {
+  font-size: 20px;
+  margin-bottom: 18px;
+  color: #111827;
+}
+
+.form-sub {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+.highlight {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* STEP1 입력 폼 */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-grid input {
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-grid input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+
+/* 로그인 폼 */
+.form-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.login-input {
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+}
+
+.login-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+
+/* STEP2 - 직무 카드 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.card {
+  background: #fafafa;
+  padding: 18px 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.card.active {
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 14px 35px rgba(88, 80, 236, 0.35);
+}
+
+.icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: inherit;
+  opacity: 0.9;
+}
+
+/* STEP3 - 스트레스 카드 */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.mood-card {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 18px 10px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mood-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.mood-card-active {
+  background: #e0ecff;
+  border-color: #6366f1;
+  box-shadow: 0 14px 30px rgba(59, 130, 246, 0.28);
+}
+
+.mood-icon {
+  font-size: 28px;
+}
+
+.mood-label {
+  font-size: 14px;
+  color: #111827;
+}
+
+/* 버튼 공통 */
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 4px;
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.prev-btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151;
+
+  /* ✅ 글자가 세로로 안 깨지도록 */
+  white-space: nowrap;
+  min-width: 90px;
+  text-align: center;
+}
+
+
+.step-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* 로그인 / 회원가입 하단 링크 */
+.auth-bottom-text {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.auth-link {
+  color: #4f46e5;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+/* 반응형 */
+@media (max-width: 720px) {
+  .signup-container {
+    width: 92%;
+  }
+
+  .form-box {
+    padding: 24px 20px 22px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mood-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ✅ 로그인/회원가입 상단 로고 (홈 nav와 유사) */
+.auth-logo-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.auth-logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #fef9c3, #4f46e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+}
+
+.auth-logo-emoji {
+  font-size: 20px;
+}
+
+.auth-logo-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+}
+
+#error {
+  color: red;
+}

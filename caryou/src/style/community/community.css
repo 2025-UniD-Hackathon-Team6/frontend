@@ -1,0 +1,450 @@
+/* 커뮤니티 메인 레이아웃 */
+.community-main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  box-sizing: border-box;
+}
+
+/* 상단 타이틀 */
+.community-hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.community-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.community-sub {
+  font-size: 15px;
+  color: #6b7280;
+}
+
+/* 검색 & 필터 줄 */
+.community-search-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.community-search-wrap {
+  flex: 1;
+  max-width: 650px;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 14px 40px rgba(148, 163, 184, 0.3);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.community-search-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.community-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #111827;
+}
+
+.community-search-input::placeholder {
+  color: #9ca3af;
+}
+
+/* 필터 그룹 */
+.community-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 공통 셀렉트 */
+.community-select {
+  min-width: 130px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #ffffff;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(148, 163, 184, 0.25);
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%),
+    linear-gradient(135deg, #6b7280 50%, transparent 50%);
+  background-position: calc(100% - 18px) 16px, calc(100% - 13px) 16px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.community-select:focus {
+  border-color: #4f46e5;
+}
+
+/* 글쓰기 버튼 */
+.community-write-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.12s ease;
+}
+
+.community-write-btn:hover {
+  transform: translateY(-1px);
+}
+
+.community-write-btn.active {
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.35);
+}
+
+.community-write-icon {
+  font-size: 16px;
+}
+
+/* ===== 새 글 작성 카드 ===== */
+
+.community-write-section {
+  margin-bottom: 28px;
+}
+
+.write-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px 32px 28px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+.write-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 24px;
+}
+
+.write-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.write-label {
+  font-size: 14px;
+  color: #374151;
+}
+
+.write-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: #f9fafb;
+  outline: none;
+  color: #111827;
+}
+
+.write-input::placeholder {
+  color: #9ca3af;
+}
+
+.write-input:focus {
+  border-color: #6366f1;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+}
+
+.write-select {
+  background: #ffffff;
+}
+
+.write-textarea {
+  resize: vertical;
+  min-height: 220px;
+}
+
+/* 하단 버튼들 */
+.write-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+}
+
+.write-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.35);
+}
+
+.write-submit-icon {
+  font-size: 16px;
+}
+
+.write-cancel-btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 14px;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+/* 게시글 리스트 */
+.community-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 게시글 카드 */
+.post-card {
+  width: 100%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.post-card-inner {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 22px 24px 20px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+/* 카드 상단 */
+.post-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.post-category-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-career {
+  background: #e0f2fe;
+  color: #1d4ed8;
+}
+
+.badge-interview {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge-study {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.badge-free {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.post-days-ago {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* 카드 본문 */
+.post-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.post-content {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* 태그 */
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+.post-tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 12px;
+}
+
+/* 카드 하단 */
+.post-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.post-author-icon {
+  font-size: 15px;
+}
+
+/* 좋아요 / 댓글 */
+.post-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 좋아요 버튼 */
+.post-like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6b7280;
+  transition: background 0.18s ease, box-shadow 0.18s ease,
+    transform 0.1s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.post-like-btn:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.post-like-btn.liked {
+  background: radial-gradient(circle at 30% 20%, #a5b4fc, #6366f1);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.25);
+  transform: translateY(-1px);
+}
+
+.post-like-emoji {
+  font-size: 16px;
+}
+
+.post-like-count {
+  font-weight: 600;
+}
+
+.post-comment-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.post-comment-icon {
+  font-size: 16px;
+}
+
+/* 페이지네이션 (모양만) */
+.community-pagination {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.page-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.page-btn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.page-btn-active {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* 반응형 */
+@media (max-width: 960px) {
+  .community-search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .community-filter-group {
+    justify-content: flex-end;
+  }
+
+  .post-card-inner {
+    padding: 18px 18px 18px;
+  }
+
+  .write-card {
+    padding: 20px 18px 24px;
+  }
+}
