@@ -145,14 +145,14 @@ const MyPage: React.FC = () => {
           </div>
 
           <div className="nav-right">
-            <Link to="/" className="nav-item">홈</Link>
+            <Link to="/main" className="nav-item">홈</Link>
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
 
             {isTokenExist() ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
-              <Link to="/login" className="login-btn">로그인</Link>
+              <Link to="/" className="login-btn">로그인</Link>
             )}
           </div>
         </div>

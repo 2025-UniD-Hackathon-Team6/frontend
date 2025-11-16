@@ -21,22 +21,30 @@ interface RoutineResponse {
 /** ⭐ 스트레스 레벨 변환 */
 const convertStressLevel = (level: string) => {
   switch (level) {
-    case "ExtremelyHigh": return "5/5 😢";
-    case "High": return "4/5 ☹️";
-    case "Middle": return "3/5 😐";
-    case "Low": return "2/5 🙂";
-    case "ExtremelyLow": return "1/5 😁";
-    default: return level;
+    case "ExtremelyHigh":
+      return "5/5 😢";
+    case "High":
+      return "4/5 ☹️";
+    case "Middle":
+      return "3/5 😐";
+    case "Low":
+      return "2/5 🙂";
+    case "ExtremelyLow":
+      return "1/5 😁";
+    default:
+      return level;
   }
 };
 
 const MyPageMood: React.FC = () => {
   const navigate = useNavigate();
 
-  /** 로그인 여부 */
-  const isTokenExist = () => !!localStorage.getItem("accessToken");
+  /** ⭐ 로그인 여부 */
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    !!localStorage.getItem("accessToken")
+  );
 
-  /** 사용자 이름 저장 */
+  /** 사용자 이름 */
   const [userName, setUserName] = useState("사용자");
 
   /** 루틴 데이터 */
@@ -44,7 +52,7 @@ const MyPageMood: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [routineError, setRoutineError] = useState<string | null>(null);
 
-  /** 로그아웃 */
+  /** ⭐ 로그아웃 */
   const logout = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -52,22 +60,26 @@ const MyPageMood: React.FC = () => {
         `${BASE_URL}/auth/logout`,
         {},
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         }
       );
-      localStorage.removeItem("accessToken");
-      alert("로그아웃 성공");
-      navigate("/login");
-    } catch {
-      alert("로그아웃 요청 실패 (404)");
-    }
+    } catch {}
+
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+    alert("로그아웃 성공");
+    navigate("/login");
   };
 
-  /** ⭐ 사용자 프로필 불러오기 */
+  /** ⭐ 사용자 프로필 */
   const loadProfile = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/auth/profile`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
       });
 
       if (res.data?.name) setUserName(res.data.name);
@@ -76,11 +88,13 @@ const MyPageMood: React.FC = () => {
     }
   };
 
-  /** ⭐ 오늘의 스트레스 기반 학습 루틴 불러오기 */
+  /** ⭐ 스트레스 기반 학습 루틴 API */
   const loadRoutine = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/attend/routines`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
       });
 
       setRoutineData(res.data);
@@ -91,6 +105,7 @@ const MyPageMood: React.FC = () => {
       if (error.response?.status === 401) {
         alert("로그인 세션 만료");
         localStorage.removeItem("accessToken");
+        setIsLoggedIn(false);
         navigate("/login");
         return;
       }
@@ -104,42 +119,55 @@ const MyPageMood: React.FC = () => {
     }
   };
 
+  /** ⭐ 최초 로딩 */
   useEffect(() => {
-    loadProfile();   // ⭐ 이름 불러오기
+    loadProfile();
     loadRoutine();
   }, []);
 
   return (
     <div className="main-container">
-
       {/* 상단바 */}
       <header className="navbar">
         <div className="nav-inner">
           <div className="nav-left">
-            <div className="nav-logo-circle"><span className="nav-logo-emoji">🚀</span></div>
+            <div className="nav-logo-circle">
+              <span className="nav-logo-emoji">🚀</span>
+            </div>
             <span className="nav-title">CARYOU</span>
           </div>
 
           <div className="nav-right">
-            <Link to="/" className="nav-item">홈</Link>
-            <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
-            <Link to="/community" className="nav-item">커뮤니티</Link>
+            <Link to="/main" className="nav-item">
+              홈
+            </Link>
+            <Link to="/mypage" className="nav-item nav-item-active">
+              마이페이지
+            </Link>
+            <Link to="/community" className="nav-item">
+              커뮤니티
+            </Link>
 
-            {isTokenExist() ? (
-              <button onClick={logout} className="login-btn">로그아웃</button>
+            {isLoggedIn ? (
+              <button onClick={logout} className="login-btn">
+                로그아웃
+              </button>
             ) : (
-              <Link to="/login" className="login-btn">로그인</Link>
+              <Link to="/login" className="login-btn">
+                로그인
+              </Link>
             )}
           </div>
         </div>
       </header>
 
       <main className="mypage-content">
-
         {/* ⭐ 프로필 */}
         <section className="profile-card">
           <div className="profile-left">
-            <div className="profile-avatar-circle"><span>👤</span></div>
+            <div className="profile-avatar-circle">
+              <span>👤</span>
+            </div>
             <div className="profile-text">
               <div className="profile-name">{userName}님</div>
               <div className="profile-email">noonsong@example.com</div>
@@ -149,44 +177,61 @@ const MyPageMood: React.FC = () => {
 
         {/* 탭 */}
         <section className="mypage-tabs">
-          <Link to="/mypage" className="tab-pill">대시보드</Link>
-          <Link to="/mypage/calendar" className="tab-pill">활동 캘린더</Link>
-          <Link to="/mypage/mood" className="tab-pill tab-pill-active">기분 기록</Link>
-          <Link to="/mypage/settings" className="tab-pill">설정</Link>
+          <Link to="/mypage" className="tab-pill">
+            대시보드
+          </Link>
+          <Link to="/mypage/calendar" className="tab-pill">
+            활동 캘린더
+          </Link>
+          <Link to="/mypage/mood" className="tab-pill tab-pill-active">
+            기분 기록
+          </Link>
+          <Link to="/mypage/settings" className="tab-pill">
+            설정
+          </Link>
         </section>
 
-        {/* ⭐ 메인 그리드 */}
+        {/* 메인 그리드 */}
         <section className="mypage-grid">
-
-          {/* 왼쪽 카드: 스트레스 루틴 */}
+          {/* ⭐ 왼쪽 카드: 루틴 */}
           <div className="card mission-card">
             <div className="mood-card-header">
-              <div className="mood-icon-circle"><span>🎯</span></div>
-              <span className="mood-card-title">스트레스 지수 기반 학습 미션</span>
+              <div className="mood-icon-circle">
+                <span>🎯</span>
+              </div>
+              <span className="mood-card-title">
+                스트레스 지수 기반 학습 미션
+              </span>
             </div>
 
             <div className="mission-box">
               {loading && <div className="mission-loading">로딩 중...</div>}
 
-              {routineError && <div className="mission-error">{routineError}</div>}
+              {routineError && (
+                <div className="mission-error">{routineError}</div>
+              )}
 
               {routineData && (
                 <>
                   <div className="mission-level">
                     오늘의 스트레스 지수:{" "}
-                    <strong>{convertStressLevel(routineData.stressLevel)}</strong>
+                    <strong>
+                      {convertStressLevel(routineData.stressLevel)}
+                    </strong>
                   </div>
 
                   <div className="mission-position">
-                    관심 직무: <strong>{routineData.position.name}</strong>
+                    관심 직무:{" "}
+                    <strong>{routineData.position.name}</strong>
                   </div>
 
-                  {/* ⭐ 루틴 3개만 */}
                   <div className="mission-list">
                     {routineData.routines.slice(0, 3).map((text, idx) => (
                       <div className="mission-item" key={idx}>
                         <span className="mission-emoji">✨</span>
-                        <span className="mission-text">{text.replace(/"/g, "")}</span>
+                        <span className="mission-text">
+                          {text.replace(/"/g, "")}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -195,37 +240,43 @@ const MyPageMood: React.FC = () => {
             </div>
           </div>
 
-          {/* 오른쪽 최근 기분 카드 (기존 유지) */}
+          {/* ⭐ 오른쪽 최근 기분 카드 */}
           <div className="card mood-recent-card">
             <div className="mood-card-header">
-              <div className="mood-icon-circle"><span>📝</span></div>
+              <div className="mood-icon-circle">
+                <span>📝</span>
+              </div>
               <span className="mood-card-title">최근 기분 기록</span>
             </div>
 
             <div className="mood-recent-list">
               <div className="mood-recent-item mood-recent-item-blue">
                 <div className="mood-recent-left">
-                  <div className="mood-emoji-circle mood-emoji-happy">😁</div>
+                  <div className="mood-emoji-circle mood-emoji-happy">
+                    😁
+                  </div>
                   <div className="mood-recent-text">
-                    <div className="mood-recent-main">매우 좋은 하루였어요!</div>
-                    <div className="mood-recent-sub">오늘</div>
+                    <div className="mood-recent-main">
+                      매우 좋은 하루였어요!
+                    </div>
+                    <div className="mood-recent-sub">2일 전</div>
                   </div>
                 </div>
               </div>
 
               <div className="mood-recent-item mood-recent-item-yellow">
                 <div className="mood-recent-left">
-                  <div className="mood-emoji-circle mood-emoji-neutral">😐</div>
+                  <div className="mood-emoji-circle mood-emoji-neutral">
+                    😐
+                  </div>
                   <div className="mood-recent-text">
                     <div className="mood-recent-main">무난했어요</div>
-                    <div className="mood-recent-sub">어제</div>
+                    <div className="mood-recent-sub">3일 전</div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
-
         </section>
       </main>
     </div>
