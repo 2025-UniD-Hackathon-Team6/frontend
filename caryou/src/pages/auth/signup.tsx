@@ -182,13 +182,13 @@ const Signup: React.FC = () => {
               <p className="form-sub">최대 3개까지 선택 가능합니다.</p>
 
               <div className="grid">
-                {jobCat.map((job) => (
+                {jobCat.map((job, index) => (
                   <div
                     key={String(job.id)}
                     className={"card " + (selectedJobCat.includes(String(job.id)) ? "active" : "")}
                     onClick={() => toggleJobCat(String(job.id))}
                   >
-                    <div className="icon">{JOB_CAT_ICON_LIST[job.id-1]}</div>
+                    <div className="icon">{JOB_CAT_ICON_LIST[index]}</div>
                     <div className="card-title">{job.name}</div>
                     <div className="card-desc">{job.description}</div>
                   </div>
@@ -212,13 +212,13 @@ const Signup: React.FC = () => {
               <p className="form-sub">최대 3개까지 선택 가능합니다.</p>
 
               <div className="grid">
-                {jobPos.map((job) => (
+                {jobPos.map((job, index) => (
                   <div
                     key={String(job.id)}
                     className={"card " + (selectedJobPos.includes(String(job.id)) ? "active" : "")}
                     onClick={() => toggleJobPos(String(job.id))}
                   >
-                    <div className="icon">{JOB_POS_ICON_LIST[job.id-1]}</div>
+                    <div className="icon">{JOB_POS_ICON_LIST[index]}</div>
                     <div className="card-title">{job.name}</div>
                     <div className="card-desc">{job.description}</div>
                   </div>
