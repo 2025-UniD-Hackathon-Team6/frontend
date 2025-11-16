@@ -1,5 +1,5 @@
 // src/pages/auth/Signup.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../style/auth/signup.css";
 import axios from "axios";
@@ -13,14 +13,8 @@ type BasicInputs = {
   birth: string;
 };
 
-const JOB_LIST = [
-  { key: "dev", icon: "💻", title: "개발", desc: "프론트엔드, 백엔드, 모바일" },
-  { key: "data", icon: "📊", title: "데이터 분석", desc: "데이터 분석, AI/ML" },
-  { key: "design", icon: "🎨", title: "디자인", desc: "UI/UX, 그래픽 디자인" },
-  { key: "marketing", icon: "📢", title: "마케팅", desc: "디지털 마케팅, 콘텐츠" },
-  { key: "finance", icon: "💰", title: "금융", desc: "투자, 재무 분석" },
-  { key: "consulting", icon: "💼", title: "컨설팅", desc: "경영, 전략 컨설팅" },
-];
+const JOB_CAT_ICON_LIST = ["💻", "📊", "🎨", "📢", "💰", "💼",];
+const JOB_POS_ICON_LIST = ["📊", "💻", "📢"];
 
 const STRESS_LEVELS = [
   { key: "0", icon: "😌", label: "전혀 없어요" },
@@ -32,7 +26,27 @@ const STRESS_LEVELS = [
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+
+  const loadJobCat = async () => {
+    const res = await axios.get('http://52.79.172.1:4000/job/categories', { });
+    const d: {id: number, name: string, description: string}[] = res.data;
+    setJobCat(d);
+  }
+  const loadJobPos = async () => {
+    const res = await axios.get('http://52.79.172.1:4000/job/positions', { });
+    const d: {id: number, categoryId: number, name: string, description: string}[] = res.data;
+    setJobPos(d);
+  }
+
+  const [jobCat, setJobCat] = useState([{id: 0, name: "", description: ""}]);
+  const [jobPos, setJobPos] = useState([{id: 0, categoryId: 0, name: "", description: ""}]);
+
+  useEffect(() => {
+    loadJobCat();      // ⭐ 사용자 이름 불러오기
+    loadJobPos();   // ⭐ 출석 데이터 불러오기
+  }, []);
+
 
   const [basic, setBasic] = useState<BasicInputs>({
     name: "",
@@ -43,7 +57,8 @@ const Signup: React.FC = () => {
     birth: "",
   });
 
-  const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
+  const [selectedJobCat, setSelectedJobCat] = useState<string[]>([]);
+  const [selectedJobPos, setSelectedJobPos] = useState<string[]>([]);
   const [stress, setStress] = useState<string>("");
 
   const handleBasicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,17 +66,26 @@ const Signup: React.FC = () => {
     setBasic((prev) => ({ ...prev, [name]: value }));
   };
 
-  const toggleJob = (jobKey: string) => {
-    setSelectedJobs((prev) => {
+  const toggleJobCat = (jobKey: string) => {
+    setSelectedJobCat((prev) => {
       const exists = prev.includes(jobKey);
       if (exists) return prev.filter((k) => k !== jobKey);
-      if (prev.length >= 3) return prev;
+      if (prev.length >= 1) return prev;
       return [...prev, jobKey];
     });
   };
 
-  const handleNext = () => setStep((prev) => (prev === 3 ? 3 : (prev + 1) as 1 | 2 | 3));
-  const handlePrev = () => setStep((prev) => (prev === 1 ? 1 : (prev - 1) as 1 | 2 | 3));
+  const toggleJobPos = (jobKey: string) => {
+    setSelectedJobPos((prev) => {
+      const exists = prev.includes(jobKey);
+      if (exists) return prev.filter((k) => k !== jobKey);
+      if (prev.length >= 1) return prev;
+      return [...prev, jobKey];
+    });
+  };
+
+  const handleNext = () => setStep((prev) => (prev === 4 ? 4 : (prev + 1) as 1 | 2 | 3 | 4));
+  const handlePrev = () => setStep((prev) => (prev === 1 ? 1 : (prev - 1) as 1 | 2 | 3 | 4));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +99,29 @@ const Signup: React.FC = () => {
         name: basic.id,
         password: basic.password,
       });
-      localStorage.setItem('accessToken', response2.data["accessToken"]);
+
+      const token = response2.data["accessToken"];
+      localStorage.setItem('accessToken', token);
+
+      await axios.post('http://52.79.172.1:4000/job/categories/interest',
+        { 
+          Ids: [parseInt(selectedJobCat[0])]
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      await axios.post('http://52.79.172.1:4000/job/positions/interest',
+        { 
+          Ids: [parseInt(selectedJobPos[0])]
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      
     navigate("/"); // ▶ 메인페이지로 즉시 이동
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
@@ -98,6 +144,7 @@ const Signup: React.FC = () => {
           <div className={`step ${step >= 1 ? "active" : ""}`}>1</div>
           <div className={`step ${step >= 2 ? "active" : ""}`}>2</div>
           <div className={`step ${step >= 3 ? "active" : ""}`}>3</div>
+          <div className={`step ${step >= 4 ? "active" : ""}`}>4</div>
         </div>
 
         <div className="form-box">
@@ -131,19 +178,19 @@ const Signup: React.FC = () => {
 
           {step === 2 && (
             <>
-              <h2 className="form-title">관심 있는 직무를 선택해주세요</h2>
+              <h2 className="form-title">관심 있는 직군을 선택해주세요</h2>
               <p className="form-sub">최대 3개까지 선택 가능합니다.</p>
 
               <div className="grid">
-                {JOB_LIST.map((job) => (
+                {jobCat.map((job) => (
                   <div
-                    key={job.key}
-                    className={"card " + (selectedJobs.includes(job.key) ? "active" : "")}
-                    onClick={() => toggleJob(job.key)}
+                    key={String(job.id)}
+                    className={"card " + (selectedJobCat.includes(String(job.id)) ? "active" : "")}
+                    onClick={() => toggleJobCat(String(job.id))}
                   >
-                    <div className="icon">{job.icon}</div>
-                    <div className="card-title">{job.title}</div>
-                    <div className="card-desc">{job.desc}</div>
+                    <div className="icon">{JOB_CAT_ICON_LIST[job.id-1]}</div>
+                    <div className="card-title">{job.name}</div>
+                    <div className="card-desc">{job.description}</div>
                   </div>
                 ))}
               </div>
@@ -160,6 +207,36 @@ const Signup: React.FC = () => {
           )}
 
           {step === 3 && (
+            <>
+              <h2 className="form-title">관심 있는 직무를 선택해주세요</h2>
+              <p className="form-sub">최대 3개까지 선택 가능합니다.</p>
+
+              <div className="grid">
+                {jobPos.map((job) => (
+                  <div
+                    key={String(job.id)}
+                    className={"card " + (selectedJobPos.includes(String(job.id)) ? "active" : "")}
+                    onClick={() => toggleJobPos(String(job.id))}
+                  >
+                    <div className="icon">{JOB_POS_ICON_LIST[job.id-1]}</div>
+                    <div className="card-title">{job.name}</div>
+                    <div className="card-desc">{job.description}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="step-buttons">
+                <button className="prev-btn" onClick={handlePrev}>
+                  ← 이전
+                </button>
+                <button className="next-btn" onClick={handleNext}>
+                  다음 단계로 →
+                </button>
+              </div>
+            </>
+          )}
+
+          {step === 4 && (
             <form onSubmit={handleSubmit}>
               <h2 className="form-title">현재 스트레스 수준은?</h2>
               <p className="form-sub">솔직히 선택해주시면 더 나은 추천을 드릴게요!</p>
