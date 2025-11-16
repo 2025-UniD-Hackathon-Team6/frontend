@@ -56,12 +56,7 @@ const MyPage: React.FC = () => {
     return { monday, sunday };
   };
 
-  const isSameDate = (d1: Date, d2: Date) =>
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
-
-  /* -------- 월간 출석 API -------- */
+  /* -------- 월간 출석 API (로컬 날짜 파싱 적용) -------- */
   const loadAttendance = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/attend/month`, {
@@ -72,20 +67,38 @@ const MyPage: React.FC = () => {
 
       const list = response.data;
 
-      const { monday, sunday } = getWeekRange();
+      const today = new Date();
+      const weekday = today.getDay(); // 일:0~토:6
+      const diffToMonday = (weekday === 0 ? -6 : 1 - weekday);
+
+      const monday = new Date(today);
+      monday.setDate(today.getDate() + diffToMonday);
+
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      // YYYY-MM-DD 포맷으로 변환
+      const format = (d: Date) =>
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+          d.getDate()
+        ).padStart(2, "0")}`;
+
+      const mondayStr = format(monday);
+      const sundayStr = format(sunday);
+
+      const flags = [false, false, false, false, false, false, false];
+
       const thisWeek = list.filter((item: any) => {
-        const d = new Date(item.checkinDate);
-        return d >= monday && d <= sunday;
+        const d = item.checkinDate; // 이미 YYYY-MM-DD
+        return d >= mondayStr && d <= sundayStr;
       });
 
       setWeeklyCount(thisWeek.length);
 
-      const flags = [false, false, false, false, false, false, false];
-
       thisWeek.forEach((item: any) => {
         const d = new Date(item.checkinDate);
-        const weekday = d.getDay();
-        const idx = (weekday === 0 ? 6 : weekday - 1);
+        const w = d.getDay();
+        const idx = w === 0 ? 6 : w - 1;
         flags[idx] = true;
       });
 
@@ -95,6 +108,7 @@ const MyPage: React.FC = () => {
     }
   };
 
+
   /* ⭐ 프로필 API 호출 */
   const loadProfile = async () => {
     try {
@@ -103,9 +117,6 @@ const MyPage: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
       });
-
-      // 예: { name: "홍길동", email: "...", ... }
-      console.log("프로필 응답:", res.data);
 
       if (res.data?.name) {
         setUserName(res.data.name);
