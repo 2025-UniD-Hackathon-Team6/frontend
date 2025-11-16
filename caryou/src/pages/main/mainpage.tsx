@@ -1,7 +1,7 @@
 // pages/main/MainPage.tsx
 import React, { useEffect, useState } from 'react';
 import '../../style/main/mainpage.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -65,7 +65,7 @@ const getPositionEmoji = (positionName: string = "") => {
 };
 
 const MainPage: React.FC = () => {
-
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("accessToken"));
   const [showMoodModal, setShowMoodModal] = useState(false);
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
@@ -202,6 +202,7 @@ const MainPage: React.FC = () => {
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false); // 🔥 즉시 UI 업데이트
     alert("로그아웃 되었습니다!");
+    navigate("/login");
   };
 
   return (
@@ -235,14 +236,14 @@ const MainPage: React.FC = () => {
           </div>
 
           <div className="nav-right">
-            <Link to="/" className="nav-item nav-item-active">홈</Link>
+            <Link to="/main" className="nav-item nav-item-active">홈</Link>
             <Link to="/mypage" className="nav-item">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
 
             {isLoggedIn ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
-              <Link to="/login" className="login-btn">로그인</Link>
+              <Link to="/" className="login-btn">로그인</Link>
             )}
           </div>
         </div>

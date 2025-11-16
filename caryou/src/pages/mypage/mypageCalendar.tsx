@@ -1,6 +1,6 @@
 // pages/mypage/mypageCalendar.tsx
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../style/main/mainpage.css';
 import '../../style/mypage/mypage.css';
@@ -12,6 +12,8 @@ interface Attendance {
 }
 
 const MyPageCalendar: React.FC = () => {
+  const navigate = useNavigate();
+
   const today = new Date();
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -21,16 +23,15 @@ const MyPageCalendar: React.FC = () => {
   /** ⭐ 사용자 이름 */
   const [userName, setUserName] = useState<string>("사용자");
 
-  /** ⭐ 로그인 여부 */
-  const isTokenExist = () => {
-    return !!localStorage.getItem("accessToken");
-  };
+  /** ⭐ 로그인 여부 (Main, MyPage, Community와 동일하게 관리) */
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("accessToken"));
 
   /** ⭐ 로그아웃 */
   const logout = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post(
+      await axios.post(
         `${BASE_URL}/auth/logout`,
         {},
         {
@@ -39,36 +40,28 @@ const MyPageCalendar: React.FC = () => {
           },
         }
       );
+    } catch (error) {}
 
-      console.log(response);
-      localStorage.removeItem("accessToken");
-      alert("로그아웃 성공");
-    } catch (error) {
-      alert("로그아웃 요청 실패 (404)");
-    }
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);   // UI 즉시 반영
+    alert("로그아웃 성공");
+    navigate("/login");     // 로그인 페이지 이동
   };
 
-  /** ⭐ API: 사용자 프로필 가져오기 */
+  /** ⭐ API: 사용자 프로필 */
   const loadProfile = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
       });
 
-      console.log("프로필 응답:", res.data);
-
-      if (res.data?.name) {
-        setUserName(res.data.name);
-      }
-
+      if (res.data?.name) setUserName(res.data.name);
     } catch (e) {
       console.error("프로필 로드 실패:", e);
     }
   };
 
-  /** ⭐ API: 월간 출석 기록 가져오기 */
+  /** ⭐ API: 월간 출석 기록 */
   const loadAttendance = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/attend/month`, {
@@ -95,30 +88,22 @@ const MyPageCalendar: React.FC = () => {
     if (currentMonth === 1) {
       setCurrentYear((y) => y - 1);
       setCurrentMonth(12);
-    } else {
-      setCurrentMonth((m) => m - 1);
-    }
+    } else setCurrentMonth((m) => m - 1);
   };
 
   const goNextMonth = () => {
     if (currentMonth === 12) {
       setCurrentYear((y) => y + 1);
       setCurrentMonth(1);
-    } else {
-      setCurrentMonth((m) => m + 1);
-    }
+    } else setCurrentMonth((m) => m + 1);
   };
 
-  /** 캘린더 날짜 생성 */
+  /** 캘린더 생성 */
   const generateCalendar = () => {
     const first = new Date(currentYear, currentMonth - 1, 1);
     const last = new Date(currentYear, currentMonth, 0);
 
-    const days: {
-      date: number;
-      muted: boolean;
-      fullDate: string;
-    }[] = [];
+    const days: { date: number; muted: boolean; fullDate: string }[] = [];
 
     const prevLast = new Date(currentYear, currentMonth - 1, 0);
     const prevDays = first.getDay();
@@ -143,8 +128,8 @@ const MyPageCalendar: React.FC = () => {
   };
 
   useEffect(() => {
-    loadProfile();      // ⭐ 사용자 이름 불러오기
-    loadAttendance();   // ⭐ 출석 데이터 불러오기
+    loadProfile();
+    loadAttendance();
   }, []);
 
   const calendarDays = generateCalendar();
@@ -163,11 +148,11 @@ const MyPageCalendar: React.FC = () => {
           </div>
 
           <div className="nav-right">
-            <Link to="/" className="nav-item">홈</Link>
+            <Link to="/main" className="nav-item">홈</Link>
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
 
-            {isTokenExist() ? (
+            {isLoggedIn ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
               <Link to="/login" className="login-btn">로그인</Link>
@@ -178,7 +163,7 @@ const MyPageCalendar: React.FC = () => {
 
       <main className="mypage-content">
 
-        {/* 🌟 프로필 */}
+        {/* ⭐ 프로필 */}
         <section className="profile-card">
           <div className="profile-left">
             <div className="profile-avatar-circle"><span>👤</span></div>
@@ -209,15 +194,13 @@ const MyPageCalendar: React.FC = () => {
               <div></div>
               <div className="calendar-month-nav">
                 <button className="month-arrow" onClick={goPrevMonth}>{'<'}</button>
-                <span className="calendar-month-text">
-                  {currentYear}년 {currentMonth}월
-                </span>
+                <span className="calendar-month-text">{currentYear}년 {currentMonth}월</span>
                 <button className="month-arrow" onClick={goNextMonth}>{'>'}</button>
               </div>
             </div>
 
             <div className="calendar-grid">
-              {['일','월','화','수','목','금','토'].map((w)=>( 
+              {['일', '월', '화', '수', '목', '금', '토'].map(w => (
                 <div key={w} className="calendar-weekday">{w}</div>
               ))}
 
@@ -232,13 +215,8 @@ const MyPageCalendar: React.FC = () => {
                   >
                     {d.date}
 
-                    {isAttended && (
-                      <span className="calendar-dot calendar-dot-green" />
-                    )}
-
-                    {isToday && (
-                      <span className="calendar-dot calendar-dot-blue" />
-                    )}
+                    {isAttended && <span className="calendar-dot calendar-dot-green" />}
+                    {isToday && <span className="calendar-dot calendar-dot-blue" />}
                   </div>
                 );
               })}
@@ -249,6 +227,7 @@ const MyPageCalendar: React.FC = () => {
                 <span className="legend-dot legend-dot-green" />
                 <span>활동 있음</span>
               </div>
+
               <div className="legend-item">
                 <span className="legend-dot legend-dot-blue" />
                 <span>오늘</span>
