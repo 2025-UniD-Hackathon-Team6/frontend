@@ -117,6 +117,7 @@ const MainPage: React.FC = () => {
       });
 
       if (Array.isArray(res.data.jobs)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mapped = res.data.jobs.map((job: any) => ({
           id: job.id,
           title: job.title,
@@ -150,19 +151,19 @@ const MainPage: React.FC = () => {
         if (attendRes.ok) {
           const text = await attendRes.text();
           if (text) {
-            try { attendJson = JSON.parse(text); } catch { }
+            try { attendJson = JSON.parse(text); } catch { /* empty */ }
           }
         }
 
         if (!attendJson) setShowMoodModal(true);
 
-        const kRes = await fetch(`${BASE_URL}/api/daily/keyword`, {
+        const kRes = await fetch(`${BASE_URL}/daily/keyword`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (kRes.ok) setDailyKeyword(await kRes.json());
 
-        const rRes = await fetch(`${BASE_URL}/api/daily/report`, {
+        const rRes = await fetch(`${BASE_URL}/daily/report`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -190,7 +191,7 @@ const MainPage: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
-    } catch { }
+    } catch { /* empty */ }
 
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
