@@ -18,6 +18,9 @@ const MyPageCalendar: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1);
   const [attendanceMap, setAttendanceMap] = useState<Record<string, boolean>>({});
 
+  /** ⭐ 사용자 이름 */
+  const [userName, setUserName] = useState<string>("사용자");
+
   /** ⭐ 로그인 여부 */
   const isTokenExist = () => {
     return !!localStorage.getItem("accessToken");
@@ -45,7 +48,27 @@ const MyPageCalendar: React.FC = () => {
     }
   };
 
-  /** ▣ API: 월간 출석 기록 가져오기 */
+  /** ⭐ API: 사용자 프로필 가져오기 */
+  const loadProfile = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+
+      console.log("프로필 응답:", res.data);
+
+      if (res.data?.name) {
+        setUserName(res.data.name);
+      }
+
+    } catch (e) {
+      console.error("프로필 로드 실패:", e);
+    }
+  };
+
+  /** ⭐ API: 월간 출석 기록 가져오기 */
   const loadAttendance = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/attend/month`, {
@@ -58,7 +81,7 @@ const MyPageCalendar: React.FC = () => {
       const map: Record<string, boolean> = {};
 
       list.forEach((item) => {
-        map[item.checkinDate] = true;
+        map[item.checkinDate.split('T')[0]] = true;
       });
 
       setAttendanceMap(map);
@@ -120,7 +143,8 @@ const MyPageCalendar: React.FC = () => {
   };
 
   useEffect(() => {
-    loadAttendance();
+    loadProfile();      // ⭐ 사용자 이름 불러오기
+    loadAttendance();   // ⭐ 출석 데이터 불러오기
   }, []);
 
   const calendarDays = generateCalendar();
@@ -143,7 +167,6 @@ const MyPageCalendar: React.FC = () => {
             <Link to="/mypage" className="nav-item nav-item-active">마이페이지</Link>
             <Link to="/community" className="nav-item">커뮤니티</Link>
 
-            {/* ⭐ 로그인 여부에 따라 버튼 변경 */}
             {isTokenExist() ? (
               <button onClick={logout} className="login-btn">로그아웃</button>
             ) : (
@@ -155,13 +178,13 @@ const MyPageCalendar: React.FC = () => {
 
       <main className="mypage-content">
 
-        {/* 프로필 */}
+        {/* 🌟 프로필 */}
         <section className="profile-card">
           <div className="profile-left">
             <div className="profile-avatar-circle"><span>👤</span></div>
             <div className="profile-text">
-              <div className="profile-name">김철수님</div>
-              <div className="profile-email">cheolsu@example.com</div>
+              <div className="profile-name">{userName}님</div>
+              <div className="profile-email">noonsong@example.com</div>
             </div>
           </div>
         </section>
